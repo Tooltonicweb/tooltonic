@@ -2,7 +2,7 @@
  
 import { useState, useCallback } from 'react'; 
 import { useDropzone } from 'react-dropzone'; 
-import { Compressor } from 'compressorjs'; 
+import Compressor from 'compressorjs'; 
  
 export default function FileUploader() { 
   const [file, setFile] = useState<File | null>(null); 
