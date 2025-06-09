@@ -1,6 +1,7 @@
-import ToolCard from '@/components/ToolCard'; 
-import { toolsData } from '@/lib/constants'; 
-import AdSpace from '@/components/AdSpace'; 
+import ToolCard from '../../../components/ToolCard'
+import AdSpace from '../../../components/AdSpace'
+import { MY_CONSTANT } from '../../../lib/constants'
+ 
  
 export default function Home() { 
   return ( 
