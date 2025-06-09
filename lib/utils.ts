@@ -137,13 +137,15 @@ ${meta.image ? `<meta property="og:image" content="${meta.image}" />` : ''}
 
 // AdSense loader
 export const loadAdSense = (clientId: string, adSlotId: string): void => {
-if (typeof window !== 'undefined') {
-(window.adsbygoogle = window.adsbygoogle || []).push({
-google_ad_client: clientId,
-enable_page_level_ads: true
-});
-}
+  if (typeof window !== 'undefined') {
+    (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+    (window as any).adsbygoogle.push({
+      google_ad_client: clientId,
+      enable_page_level_ads: true,
+    });
+  }
 };
+
 
 // Mobile detection
 export const isMobile = (): boolean => {
