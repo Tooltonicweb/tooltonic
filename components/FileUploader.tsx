@@ -68,26 +68,17 @@ export default function FileUploader() {
     <div className="space-y-6"> 
       <div  
         {...getRootProps()} 
-        className={`border-2 border-dashed rounded-xl p-12 text-center curs
- or-pointer transition-colors 
-          ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 
-hover:border-blue-400'}`} 
-      > 
+        className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors 
+          ${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}`} > 
         <input {...getInputProps()} /> 
-        <div className="flex flex-col items-center justify-center space-y-3
- "> 
-          <svg className="w-12 h-12 text-blue-500" fill="none" stroke="curr
- entColor" viewBox="0 0 24 24"> 
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth=
- "2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3
-3m0 0l-3 3m3-3v12" /> 
+        <div className="flex flex-col items-center justify-center space-y-3"> 
+          <svg className="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"> 
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-33m0 0l-3 3m3-3v12" /> 
           </svg> 
           <p className="text-lg font-medium"> 
-            {isDragActive ? 'Drop the file here' : 'Drag & drop an image, o
- r click to select'} 
+            {isDragActive ? 'Drop the file here' : 'Drag & drop an image, or click to select'} 
           </p> 
-          <p className="text-sm text-gray-500">Supports: JPEG, PNG, WEBP</p
- > 
+          <p className="text-sm text-gray-500">Supports: JPEG, PNG, WEBP</p> 
         </div> 
       </div> 
  
@@ -95,8 +86,7 @@ hover:border-blue-400'}`}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> 
           <div className="space-y-2"> 
             <h3 className="font-medium">Original Image</h3> 
-            <img src={preview} alt="Original" className="w-full rounded-lg 
-border" /> 
+            <img src={preview} alt="Original" className="w-full rounded-lg border" /> 
             <p className="text-sm text-gray-500"> 
               Size: {(file?.size / 1024).toFixed(2)} KB 
             </p> 
@@ -107,24 +97,20 @@ border" />
              
             <div className="grid grid-cols-2 gap-4"> 
               <div> 
-                <label className="block text-sm font-medium mb-1">Width (px
- )</label> 
+                <label className="block text-sm font-medium mb-1">Width (px)</label> 
                 <input 
                   type="number" 
                   value={options.width} 
-                  onChange={(e) => setOptions({...options, width: parseInt(
- e.target.value) || 0})} 
+                  onChange={(e) => setOptions({...options, width: parseInt(e.target.value) || 0})} 
                   className="w-full px-3 py-2 border rounded-md" 
                 /> 
               </div> 
               <div> 
-                <label className="block text-sm font-medium mb-1">Height (p
- x)</label> 
+                <label className="block text-sm font-medium mb-1">Height (px)</label> 
                 <input 
                   type="number" 
                   value={options.height} 
-                  onChange={(e) => setOptions({...options, height: parseInt
- (e.target.value) || 0})} 
+                  onChange={(e) => setOptions({...options, height: parseInt(e.target.value) || 0})} 
                   className="w-full px-3 py-2 border rounded-md" 
                 /> 
               </div> 
@@ -135,8 +121,7 @@ border" />
                 type="checkbox" 
                 id="maintainAspect" 
                 checked={options.maintainAspect} 
-                onChange={(e) => setOptions({...options, maintainAspect: e.
- target.checked})} 
+                onChange={(e) => setOptions({...options, maintainAspect: e.target.checked})} 
                 className="h-4 w-4 text-blue-600 rounded" 
               /> 
               <label htmlFor="maintainAspect" className="text-sm"> 
@@ -145,14 +130,11 @@ border" />
             </div> 
  
             <div> 
-              <label className="block text-sm font-medium mb-1">Output Form
- at</label> 
+              <label className="block text-sm font-medium mb-1">Output Format</label> 
               <select 
                 value={options.format} 
-                onChange={(e) => setOptions({...options, format: e.target.v
- alue})} 
-                className="w-full px-3 py-2 border rounded-md" 
-              > 
+                onChange={(e) => setOptions({...options, format: e.target.value})} 
+                className="w-full px-3 py-2 border rounded-md" > 
                 <option value="jpeg">JPEG</option> 
                 <option value="png">PNG</option> 
                 <option value="webp">WebP</option> 
@@ -168,19 +150,14 @@ border" />
                 min="1" 
                 max="100" 
                 value={options.quality} 
-                onChange={(e) => setOptions({...options, quality: parseInt(
- e.target.value)})} 
-                className="w-full" 
-              /> 
+                onChange={(e) => setOptions({...options, quality: parseInt(e.target.value)})} 
+                className="w-full" /> 
             </div> 
  
             <button 
               onClick={handleResize} 
               disabled={loading} 
-              className={`w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 te
- xt-white font-medium rounded-md transition ${loading ? 'opacity-70 cursor-n
- ot-allowed' : ''}`} 
-            > 
+              className={`w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition ${loading ? 'opacity-70 cursor-not-allowed' : ''}`} > 
               {loading ? 'Processing...' : 'Download Resized Image'} 
             </button> 
           </div> 
