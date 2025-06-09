@@ -11,8 +11,7 @@ export const toolsData: Tool[] = [
   { 
     id: 1, 
     title: "Image Resize", 
-    description: "Resize your images to any dimension without losing qualit
- y.", 
+    description: "Resize your images to any dimension without losing quality.", 
     icon: "🖼️", 
     slug: "image-resize", 
     color: "from-blue-500 to-indigo-600" 
@@ -20,8 +19,7 @@ export const toolsData: Tool[] = [
   { 
     id: 2, 
     title: "Compress Files", 
-    description: "Reduce file size of images, PDFs and more while maintaini
- ng quality.", 
+    description: "Reduce file size of images, PDFs and more while maintaining quality.", 
     icon: "🗜️", 
     slug: "compress-files", 
     color: "from-green-500 to-teal-600" 
@@ -29,8 +27,7 @@ export const toolsData: Tool[] = [
   { 
     id: 3, 
     title: "Convert File", 
-    description: "Convert between different file formats easily and quickly
- .", 
+    description: "Convert between different file formats easily and quickly.", 
     icon: "🔄", 
     slug: "convert-files", 
     color: "from-purple-500 to-pink-600" 
@@ -38,8 +35,7 @@ export const toolsData: Tool[] = [
   { 
     id: 4, 
     title: "Generate QR Code", 
-    description: "Create custom QR codes for URLs, text, contact info and m
- ore.", 
+    description: "Create custom QR codes for URLs, text, contact info and more.", 
     icon: "📲", 
     slug: "generate-qr", 
     color: "from-yellow-500 to-orange-600" 
@@ -47,8 +43,7 @@ export const toolsData: Tool[] = [
   { 
     id: 5, 
     title: "MP3 Cutter", 
-    description: "Cut and trim your audio files online without quality loss
- .", 
+    description: "Cut and trim your audio files online without quality loss.", 
     icon: "🎵", 
     slug: "mp3-cutter", 
     color: "from-red-500 to-pink-600" 
@@ -56,8 +51,7 @@ export const toolsData: Tool[] = [
   { 
     id: 6, 
     title: "Photo Collage", 
-    description: "Combine multiple photos into beautiful collages with cust
- om layouts.", 
+    description: "Combine multiple photos into beautiful collages with custom layouts.", 
     icon: "🖼️🖼️", 
     slug: "photo-collage", 
     color: "from-indigo-500 to-blue-600" 
@@ -65,8 +59,7 @@ export const toolsData: Tool[] = [
   { 
     id: 7, 
     title: "Scan QR Code", 
-    description: "Scan QR codes from your device's camera or uploaded image
- s.", 
+    description: "Scan QR codes from your device's camera or uploaded images.", 
     icon: "📷", 
     slug: "scan-qr", 
     color: "from-teal-500 to-green-600" 
@@ -74,8 +67,7 @@ export const toolsData: Tool[] = [
   { 
     id: 8, 
     title: "Erase Background", 
-    description: "Remove backgrounds from images automatically with AI tech
- nology.", 
+    description: "Remove backgrounds from images automatically with AI technology.", 
     icon: "✂️", 
     slug: "erase-background", 
     color: "from-orange-500 to-red-600" 
