@@ -15,8 +15,7 @@ MP3 cutter, photo collage, background remover`,
   authors: [{ name: 'ToolTonic', url: 'https://tooltonic.io' }], 
   openGraph: { 
     title: 'ToolTonic - AI Powered File First Aid', 
-    description: 'Free online tools for image editing, file conversion, QR 
-codes and more.', 
+    description: 'Free online tools for image editing, file conversion, QR codes and more.', 
     url: 'https://tooltonic.io', 
     siteName: 'ToolTonic', 
     images: [ 
@@ -32,8 +31,7 @@ codes and more.',
   twitter: { 
     card: 'summary_large_image', 
     title: 'ToolTonic - AI Powered File First Aid', 
-    description: 'Free online tools for image editing, file conversion, QR 
-codes and more.', 
+    description: 'Free online tools for image editing, file conversion, QR codes and more.', 
     images: ['https://tooltonic.io/og-image.png'], 
   }, 
 }; 
