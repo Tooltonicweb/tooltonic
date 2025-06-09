@@ -44,8 +44,12 @@ router.events.off('routeChangeComplete', handleRouteChange);
 }, [router.events]);
 
 return (
-<header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90
-dark:bg-gray-900/90 shadow-sm' : 'bg-white dark:bg-gray-900'} ${darkMode ? 'dark' : ''}`}>
+<header
+  className={`fixed w-full z-50 transition-all duration-300 ${
+    isScrolled ? 'bg-white/90 dark:bg-gray-900/90 shadow-sm' : 'bg-white dark:bg-gray-900'
+  } ${darkMode ? 'dark' : ''}`}
+>
+
 {/* Ad Space - Top */}
 
 <div className="bg-gray-100 dark:bg-gray-800 text-center py-1 text-xs text-gray-500 dark:text-
