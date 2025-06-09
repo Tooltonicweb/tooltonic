@@ -1,3 +1,5 @@
+'use client'; 
+
 import ToolCard from '../../../components/ToolCard'
 import AdSpace from '../../../components/AdSpace'
 import { toolsData } from '../../../lib/constants'
