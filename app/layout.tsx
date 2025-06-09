@@ -10,8 +10,8 @@ export const metadata: Metadata = {
   title: 'ToolTonic - AI Powered File First Aid', 
   description: `Free online tools for image editing, file conversion, QR codes and more. 
 AI-powered solutions for all your file needs.`, 
-  keywords: 'image resize, compress files, convert files, QR code generator
- , MP3 cutter, photo collage, background remover', 
+  keywords: `image resize, compress files, convert files, QR code generator,
+MP3 cutter, photo collage, background remover`,
   authors: [{ name: 'ToolTonic', url: 'https://tooltonic.io' }], 
   openGraph: { 
     title: 'ToolTonic - AI Powered File First Aid', 
