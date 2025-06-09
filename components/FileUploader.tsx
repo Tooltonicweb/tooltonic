@@ -32,37 +32,37 @@ export default function FileUploader() {
     maxFiles: 1 
   }); 
  
-  const handleResize = async () => { 
-    if (!file) return; 
-    setLoading(true); 
- 
-    try { 
-      const result = await new Promise<File>((resolve, reject) => { 
-        new Compressor(file, { 
-          width: options.width, 
-          height: options.height, 
-          quality: options.quality / 100, 
-          mimeType: `image/${options.format}`, 
-          success: resolve, 
-          error: reject, 
-        }); 
-      }); 
- 
-      // Create download link 
-      const url = URL.createObjectURL(result); 
-      const a = document.createElement('a'); 
-      a.href = url; 
-      a.download = `resized-image.${options.format}`; 
-      document.body.appendChild(a); 
-      a.click(); 
-      document.body.removeChild(a); 
-      URL.revokeObjectURL(url); 
-    } catch (error) { 
-      console.error('Error resizing image:', error); 
-    } finally { 
-      setLoading(false); 
-    } 
-  }; 
+  const handleResize = async () => {
+  if (!file) return;
+  setLoading(true);
+
+  try {
+    const result = await new Promise<File>((resolve, reject) => {
+      new Compressor(file, {
+        width: options.width,
+        height: options.height,
+        quality: options.quality / 100,
+        mimeType: `image/${options.format}`,
+        success: (compressedResult) => resolve(compressedResult as File),
+        error: reject,
+      });
+    });
+
+    const url = URL.createObjectURL(result);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `resized-image.${options.format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error resizing image:', error);
+  } finally {
+    setLoading(false);
+  }
+};
+
  
   return ( 
     <div className="space-y-6"> 
