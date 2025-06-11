@@ -2,9 +2,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation'; // Sirf agar use ho raha ho tab
-import ToolCard from '../../components/ToolCard';
-import { toolsData } from '../../lib/constants';
-import AdSpace from '../../components/AdSpace';
+import ToolCard from '../components/ToolCard';
+import { toolsData } from '../lib/constants';
+import AdSpace from '../components/AdSpace';
  
 export default function Home() { 
   return ( 

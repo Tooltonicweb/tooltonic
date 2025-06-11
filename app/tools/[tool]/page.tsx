@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { toolsData } from '../../../../lib/constants';
+import { toolsData } from '../../../lib/constants';
 
 export default function ToolPage({ params }: { params: { tool: string } }) {
   const tool = toolsData.find(t => t.slug === params.tool);
