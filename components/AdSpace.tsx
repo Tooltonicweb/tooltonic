@@ -1,7 +1,7 @@
 'use client';
 
 import Script from 'next/script';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 interface AdSpaceProps {
   type: 'horizontal' | 'vertical';
@@ -9,10 +9,24 @@ interface AdSpaceProps {
 
 export default function AdSpace({ type }: AdSpaceProps) {
   const [isClient, setIsClient] = useState(false);
+  const adLoaded = useRef(false); // 👈 track if already pushed
 
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  useEffect(() => {
+    if (isClient && !adLoaded.current) {
+      try {
+        if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
+          (window as any).adsbygoogle.push({});
+          adLoaded.current = true; // 👈 mark as loaded
+        }
+      } catch (err) {
+        console.error("Adsense error:", err);
+      }
+    }
+  }, [isClient]);
 
   if (!isClient) return null;
 
@@ -34,10 +48,6 @@ export default function AdSpace({ type }: AdSpaceProps) {
         data-ad-format={type === 'horizontal' ? 'auto' : 'vertical'}
         data-full-width-responsive="true"
       />
-      <Script id="ad-script">
-        {`(adsbygoogle = window.adsbygoogle || []).push({});`}
-      </Script>
-
       <div className="text-center p-4 text-gray-500">Advertisement</div>
     </div>
   );

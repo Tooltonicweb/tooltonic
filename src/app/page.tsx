@@ -1,6 +1,10 @@
-import ToolCard from '../components/ToolCard'; 
-import { toolsData } from '../lib/constants'; 
-import AdSpace from '../components/AdSpace'; 
+
+'use client';
+
+import { useRouter } from 'next/navigation'; // Sirf agar use ho raha ho tab
+import ToolCard from '../../components/ToolCard';
+import { toolsData } from '../../lib/constants';
+import AdSpace from '../../components/AdSpace';
  
 export default function Home() { 
   return ( 
@@ -29,18 +33,18 @@ export default function Home() {
  
       <AdSpace type="horizontal" /> 
  
-      <section id="tools" className="py-8"> 
-        <h2 className="text-3xl font-bold mb-8 text-center">Our Powerful Tools</h2> 
-        <div className="tools-grid grid grid-cols-1 sm:grid-cols-2 lg:gridcols-4 gap-6"> 
-          {toolsData.map((tool, index) => ( 
-            <ToolCard  
-              key={tool.id} 
-              tool={tool} 
-              animationDelay={index * 0.1} 
-            /> 
-          ))} 
-        </div> 
-      </section> 
+      <section id="tools" className="py-8">
+        <h2 className="text-3xl font-bold mb-8 text-center">Our Powerful Tools</h2>
+        <div className="tools-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {toolsData.map((tool, index) => (
+            <ToolCard
+              key={tool.id}
+              tool={tool}
+              animationDelay={index * 0.1}
+            />
+          ))}
+        </div>
+      </section>
  
       <AdSpace type="horizontal" /> 
  
