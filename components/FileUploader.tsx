@@ -1,75 +1,180 @@
-'use client'; 
-import React from 'react';
+'use client';
 
-const Footer: React.FC = () => {
-return (
-<footer className="bg-dark text-light py-8 mt-auto">
-<div className="container">
-<div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-<div>
-<h3 className="text-xl font-bold mb-4">ToolTonic</h3>
-<p className="mb-4">AI Powered file first aid for all your digital needs.</p>
-<div className="flex space-x-4">
-<a href="#" className="text-light hover:text-accent transition">
-<svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-<path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657
-9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195
-2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343
-21.128 22 16.991 22 12z" clipRule="evenodd" />
-</svg>
-</a>
-<a href="#" className="text-light hover:text-accent transition">
-<svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-<path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348
-8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996
-4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072
-0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834
-2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-</svg>
-</a>
-</div>
-</div>
+import { useState, useCallback } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { Compressor } from 'compressorjs';
 
-<div>
-<h4 className="text-lg font-semibold mb-4">Tools</h4>
+export default function FileUploader() {
+const [file, setFile] = useState<File | null>(null);
+const [preview, setPreview] = useState<string | null>(null);
+const [loading, setLoading] = useState(false);
+const [options, setOptions] = useState({
+width: 800,
+height: 600,
+maintainAspect: true,
+format: 'jpeg',
+quality: 80,
+});
 
-<ul className="space-y-2">
-<li><a href="/image-resize" className="hover:text-accent transition">Image Resize</a></li>
-<li><a href="/compress-files" className="hover:text-accent transition">Compress
-Files</a></li>
-<li><a href="/convert-file" className="hover:text-accent transition">Convert File</a></li>
-<li><a href="/generate-qr" className="hover:text-accent transition">Generate QR
-Code</a></li>
-</ul>
-</div>
+const onDrop = useCallback((acceptedFiles: File[]) => {
+const file = acceptedFiles[0];
+if (!file) return;
 
-<div>
-<h4 className="text-lg font-semibold mb-4">Company</h4>
-<ul className="space-y-2">
-<li><a href="/about" className="hover:text-accent transition">About Us</a></li>
-<li><a href="/blog" className="hover:text-accent transition">Blog</a></li>
-<li><a href="/privacy" className="hover:text-accent transition">Privacy Policy</a></li>
-<li><a href="/terms" className="hover:text-accent transition">Terms of Service</a></li>
-</ul>
-</div>
+setFile(file);
+setPreview(URL.createObjectURL(file));
+}, []);
 
-<div>
-<h4 className="text-lg font-semibold mb-4">Support</h4>
-<ul className="space-y-2">
-<li><a href="/contact" className="hover:text-accent transition">Contact Us</a></li>
-<li><a href="/faq" className="hover:text-accent transition">FAQ</a></li>
-<li><a href="/feedback" className="hover:text-accent transition">Feedback</a></li>
-</ul>
-</div>
-</div>
+const { getRootProps, getInputProps, isDragActive } = useDropzone({
+onDrop,
+accept: {
+'image/*': ['.jpeg', '.jpg', '.png', '.webp']
+},
+maxFiles: 1
+});
 
-<div className="border-t border-gray-700 mt-8 pt-8 text-center">
-<p>© {new Date().getFullYear()} ToolTonic.io. All rights reserved.</p>
+const handleResize = async () => {
+if (!file) return;
+setLoading(true);
 
-</div>
-</div>
-</footer>
-);
+try {
+const result = await new Promise<File>((resolve, reject) => {
+new Compressor(file, {
+width: options.width,
+height: options.height,
+quality: options.quality / 100,
+mimeType: `image/${options.format}`,
+success: resolve,
+error: reject,
+});
+});
+
+const url = URL.createObjectURL(result);
+const a = document.createElement('a');
+a.href = url;
+a.download = `resized-image.${options.format}`;
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+URL.revokeObjectURL(url);
+} catch (error) {
+console.error('Error resizing image:', error);
+} finally {
+setLoading(false);
+}
 };
 
-export default Footer;
+return (
+<div className="space-y-6">
+<div
+{...getRootProps()}
+
+className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-
+colors
+
+${isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400'}`}
+>
+<input {...getInputProps()} />
+<div className="flex flex-col items-center justify-center space-y-3">
+
+<svg className="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24
+24">
+<path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-
+.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+</svg>
+<p className="text-lg font-medium">
+{isDragActive ? 'Drop the file here' : 'Drag & drop an image, or click to select'}
+</p>
+<p className="text-sm text-gray-500">Supports: JPEG, PNG, WEBP</p>
+</div>
+</div>
+
+{preview && (
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div className="space-y-2">
+<h3 className="font-medium">Original Image</h3>
+<img src={preview} alt="Original" className="w-full rounded-lg border" />
+<p className="text-sm text-gray-500">
+Size: {(file?.size / 1024).toFixed(2)} KB
+</p>
+</div>
+
+<div className="space-y-4">
+<h3 className="font-medium">Resize Options</h3>
+
+<div className="grid grid-cols-2 gap-4">
+<div>
+<label className="block text-sm font-medium mb-1">Width (px)</label>
+<input
+type="number"
+value={options.width}
+onChange={(e) => setOptions({...options, width: parseInt(e.target.value) || 0})}
+className="w-full px-3 py-2 border rounded-md"
+/>
+</div>
+<div>
+<label className="block text-sm font-medium mb-1">Height (px)</label>
+<input
+type="number"
+value={options.height}
+onChange={(e) => setOptions({...options, height: parseInt(e.target.value) || 0})}
+className="w-full px-3 py-2 border rounded-md"
+/>
+</div>
+</div>
+
+<div className="flex items-center space-x-2">
+<input
+type="checkbox"
+id="maintainAspect"
+
+checked={options.maintainAspect}
+onChange={(e) => setOptions({...options, maintainAspect: e.target.checked})}
+className="h-4 w-4 text-blue-600 rounded"
+/>
+<label htmlFor="maintainAspect" className="text-sm">
+Maintain aspect ratio
+</label>
+</div>
+
+<div>
+<label className="block text-sm font-medium mb-1">Output Format</label>
+<select
+value={options.format}
+onChange={(e) => setOptions({...options, format: e.target.value})}
+className="w-full px-3 py-2 border rounded-md"
+>
+<option value="jpeg">JPEG</option>
+<option value="png">PNG</option>
+<option value="webp">WebP</option>
+</select>
+</div>
+
+<div>
+<label className="block text-sm font-medium mb-1">
+Quality: {options.quality}%
+
+</label>
+<input
+type="range"
+min="1"
+max="100"
+value={options.quality}
+onChange={(e) => setOptions({...options, quality: parseInt(e.target.value)})}
+className="w-full"
+/>
+</div>
+
+<button
+onClick={handleResize}
+disabled={loading}
+className={`w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium
+rounded-md transition ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+>
+{loading ? 'Processing...' : 'Download Resized Image'}
+</button>
+</div>
+</div>
+)}
+</div>
+);
+}
