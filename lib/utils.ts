@@ -113,27 +113,56 @@ timeout = setTimeout(() => func(...args), wait);
 
 // SEO Helper - Generate meta tags
 export const generateMetaTags = (meta: {
-title: string;
-description: string;
-keywords: string[];
-url: string;
-image?: string;
+  title: string;
+  description: string;
+  keywords: string[];
+  url: string;
+  image?: string;
 }): string => {
-return `
+  const imageUrl = meta.image || 'https://tooltonic.io/logo.png';
+
+  return `
 <title>${meta.title} | ToolTonic</title>
 <meta name="description" content="${meta.description}" />
 <meta name="keywords" content="${meta.keywords.join(', ')}" />
-<meta property="og:title" content="${meta.title}" />
+<link rel="canonical" href="${meta.url}" />
 
+<!-- Open Graph / Facebook -->
+<meta property="og:title" content="${meta.title}" />
 <meta property="og:description" content="${meta.description}" />
 <meta property="og:url" content="${meta.url}" />
-${meta.image ? `<meta property="og:image" content="${meta.image}" />` : ''}
+<meta property="og:image" content="${imageUrl}" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:width" content="500" />
+<meta property="og:image:height" content="500" />
+<meta property="og:image:alt" content="ToolTonic Logo" />
 <meta property="og:type" content="website" />
+<meta property="og:site_name" content="ToolTonic" />
+
+<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="${meta.title}" />
 <meta name="twitter:description" content="${meta.description}" />
+<meta name="twitter:image" content="${imageUrl}" />
+
+<!-- Icons -->
+<link rel="icon" href="/logo.png" type="image/png" />
+<link rel="apple-touch-icon" href="/logo.png" />
+<meta name="msapplication-TileImage" content="/logo.png" />
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "ToolTonic",
+  "url": "https://tooltonic.io",
+  "logo": "https://tooltonic.io/logo.png"
+}
+</script>
 `;
 };
+
 
 // AdSense loader
 export const loadAdSense = (clientId: string, adSlotId: string): void => {
