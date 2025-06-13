@@ -249,6 +249,10 @@ footer .footer-bottom {
   font-size: 0.9rem;
 }
 
+footer .flex {
+   width: 100px;
+  }
+
 /* Responsive Footer */
 @media (max-width: 768px) {
   footer .grid {

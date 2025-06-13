@@ -6,34 +6,6 @@ import ToolCard from '../components/ToolCard';
 import { toolsData } from '../lib/constants';
 import AdSpace from '../components/AdSpace';
 
-export const metadata = {
-  title: 'ToolTonic | Your AI Tool Hub',
-  description: 'ToolTonic is your all-in-one AI tools platform',
-  openGraph: {
-    title: 'ToolTonic | Your AI Tool Hub',
-    description: 'ToolTonic is your all-in-one AI tools platform',
-    url: 'https://tooltonic.io',
-    siteName: 'ToolTonic',
-    images: [
-      {
-        url: 'https://tooltonic.io/og-image.png.png',
-        width: 800,
-        height: 600,
-        alt: 'ToolTonic Logo',
-      },
-    ],
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'ToolTonic | Your AI Tool Hub',
-    description: 'ToolTonic is your all-in-one AI tools platform',
-    images: ['https://tooltonic.io/og-image.png.png'],
-  },
-};
-
-
-
 export default function Home() { 
   return ( 
     <main className="container mx-auto px-4 py-8"> 

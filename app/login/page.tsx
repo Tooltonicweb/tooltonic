@@ -3,13 +3,13 @@ import { Metadata } from 'next';
 import Head from 'next/head';
 
 export const metadata: Metadata = {
-  title: 'Contact ToolTonic - AI File Tools Support | tooltonic.io',
+  title: 'ToolTonic - AI File Tools Support | tooltonic.io',
   description: 'Need help with ToolTonic? Contact us at tooltonicapp@gmail.com for inquiries, feedback, or support.',
   keywords: ['ToolTonic support', 'contact file tools', 'PDF compressor contact', 'AI tools feedback'],
   openGraph: {
-    title: 'Contact ToolTonic - Get Help with AI File Tools',
+    title: 'ToolTonic - Get Help with AI File Tools',
     description: 'Reach out at tooltonicapp@gmail.com for support with ToolTonic&#39;s file conversion, compression, and editing tools.',
-    url: 'https://tooltonic.io/contact-us',
+    url: 'https://tooltonic.io/login',
     type: 'website',
     images: [
       {
@@ -27,11 +27,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ContactUsPage() {
+export default function LoginPage() {
   return (
     <>
       <Head>
-        <link rel="canonical" href="https://tooltonic.io/contact-us" />
+        <link rel="canonical" href="https://tooltonic.io/login" />
       </Head>
 
       {/* JSON-LD Schema.org */}
@@ -66,16 +66,8 @@ export default function ContactUsPage() {
       />
 
       <section className="container mx-auto px-4 py-12 animate-fade">
-        <h1 className="text-3xl font-bold text-center mb-6 text-primary">Contact ToolTonic</h1>
-        <p className="text-center mb-8 text-gray-600">
-          For any queries, suggestions, or technical issues, feel free to reach out. We&apos;re here to help you!
-        </p>
-        <div className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Get in Touch</h2>
-          <p className="mb-2">📧 Email: <a href="mailto:tooltonicapp@gmail.com" className="text-blue-600 hover:underline">tooltonicapp@gmail.com</a></p>
-          <p className="mb-2">🌐 Website: <a href="https://tooltonic.io" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">tooltonic.io</a></p>
-          <p className="mb-2">📍 Location: India 🇮🇳</p>
-        </div>
+        <h1 className="text-3xl font-bold text-center mb-6 text-primary">Login</h1>
+        
       </section>
     </>
   );

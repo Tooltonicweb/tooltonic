@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import { toolsData } from '../lib/constants';
 
 const Footer: React.FC = () => {
   return (
@@ -10,8 +12,8 @@ const Footer: React.FC = () => {
             <p className="mb-4">AI Powered file first aid for all your digital needs.</p>
             <div className="flex space-x-4">
               {/* Facebook */}
-              <a href="https://facebook.com/yourpage" target="_blank" className="text-light hover:text-accent transition">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <a href="https://facebook.com/tooltonic" target="_blank" className="text-light hover:text-accent transition">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657
                   9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89
                   1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63
@@ -20,8 +22,8 @@ const Footer: React.FC = () => {
                 </svg>
               </a>
               {/* Twitter */}
-              <a href="https://twitter.com/yourhandle" target="_blank" className="text-light hover:text-accent transition">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <a href="https://twitter.com/tooltonic" target="_blank" className="text-light hover:text-accent transition">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675
                   0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19
                   8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27
@@ -35,8 +37,8 @@ const Footer: React.FC = () => {
                 </svg>
               </a>
               {/* Instagram */}
-              <a href="https://instagram.com/yourprofile" target="_blank" className="text-light hover:text-accent transition">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <a href="https://instagram.com/tooltonic" target="_blank" className="text-light hover:text-accent transition">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M7.75 2C5.126 2 3 4.126 3 6.75v10.5C3 19.874 5.126 22 7.75
                   22h8.5C18.874 22 21 19.874 21 17.25V6.75C21 4.126
                   18.874 2 16.25 2h-8.5zM12 8.75a3.25 3.25 0 110
@@ -45,8 +47,8 @@ const Footer: React.FC = () => {
                 </svg>
               </a>
               {/* LinkedIn */}
-              <a href="https://linkedin.com/company/yourcompany" target="_blank" className="text-light hover:text-accent transition">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <a href="https://linkedin.com/company/tooltonic" target="_blank" className="text-light hover:text-accent transition">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M19 0h-14C2.238 0 1 1.238 1 3v18c0 1.762
                   1.238 3 3 3h14c1.762 0 3-1.238 3-3V3c0-1.762-1.238-3-3-3zM8
                   20H5v-9h3v9zm-1.5-10.3c-.966 0-1.75-.784-1.75-1.75s.784-1.75
@@ -57,8 +59,8 @@ const Footer: React.FC = () => {
                 </svg>
               </a>
               {/* YouTube */}
-              <a href="https://youtube.com/@yourchannel" target="_blank" className="text-light hover:text-accent transition">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <a href="https://youtube.com/@tooltonic" target="_blank" className="text-light hover:text-accent transition">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M23.498 6.186a2.966 2.966 0 00-2.086-2.096C19.69 3.5
                   12 3.5 12 3.5s-7.69 0-9.412.59a2.966 2.966 0 00-2.086
                   2.096A30.211 30.211 0 000 12a30.21 30.21 0 00.502
@@ -70,8 +72,8 @@ const Footer: React.FC = () => {
                 </svg>
               </a>
               {/* GitHub */}
-              <a href="https://github.com/yourrepo" target="_blank" className="text-light hover:text-accent transition">
-                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <a href="https://github.com/Tooltonicweb" target="_blank" className="text-light hover:text-accent transition">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 0C5.372 0 0 5.373 0 12c0 5.303 3.438
                   9.8 8.205 11.387.6.113.82-.26.82-.577
                   0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.387-1.333-1.757-1.333-1.757-1.09-.745.083-.729.083-.729
@@ -93,17 +95,18 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Tools</h4>
             <ul className="space-y-2">
-              <li><a href="/image-resize" className="hover:text-accent transition">Image Resize</a></li>
-              <li><a href="/compress-files" className="hover:text-accent transition">Compress Files</a></li>
-              <li><a href="/convert-file" className="hover:text-accent transition">Convert File</a></li>
-              <li><a href="/generate-qr" className="hover:text-accent transition">Generate QR Code</a></li>
+              <li><Link href="/tools/image-resize" className="hover:text-accent transition">Image Resize</Link></li>
+              <li><a href="tools/image-resize" className="hover:text-accent transition">Image Resize</a></li>
+              <li><a href="tools/compress-files" className="hover:text-accent transition">Compress Files</a></li>
+              <li><a href="tools/convert-files" className="hover:text-accent transition">Convert File</a></li>
+              <li><a href="tools/generate-qr" className="hover:text-accent transition">Generate QR Code</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="text-lg font-semibold mb-4">Company</h4>
             <ul className="space-y-2">
-              <li><a href="/about" className="hover:text-accent transition">About Us</a></li>
+              <li><a href="/about-us" className="hover:text-accent transition">About Us</a></li>
               <li><a href="/blog" className="hover:text-accent transition">Blog</a></li>
               <li><a href="/privacy" className="hover:text-accent transition">Privacy Policy</a></li>
               <li><a href="/terms" className="hover:text-accent transition">Terms of Service</a></li>
@@ -113,7 +116,7 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Support</h4>
             <ul className="space-y-2">
-              <li><a href="/contact" className="hover:text-accent transition">Contact Us</a></li>
+              <li><a href="/contact-us" className="hover:text-accent transition">Contact Us</a></li>
               <li><a href="/faq" className="hover:text-accent transition">FAQ</a></li>
               <li><a href="/feedback" className="hover:text-accent transition">Feedback</a></li>
             </ul>
