@@ -32,35 +32,44 @@ export default function ImageResizerPage() {
   });
 
   const handleResize = async () => {
-    if (!file) return;
-    setLoading(true);
+  if (!file) return;
+  setLoading(true);
 
-    try {
-      const result = await new Promise<File>((resolve, reject) => {
-        new Compressor(file, {
-          width: options.width,
-          height: options.height,
-          quality: options.quality / 100,
-          mimeType: `image/${options.format}`,
-          success: resolve,
-          error: reject,
-        });
+  try {
+    const result = await new Promise<File>((resolve, reject) => {
+      new Compressor(file, {
+        width: options.width,
+        height: options.height,
+        quality: options.quality / 100,
+        mimeType: `image/${options.format}`,
+        
+        // 🔧 ✅ FIXED: Convert Blob to File
+        success: (result) => {
+          const fileName = file.name.replace(/\.[^/.]+$/, '');
+          const finalFile = new File([result], `${fileName}_resized.${options.format}`, {
+            type: result.type,
+            lastModified: Date.now(),
+          });
+          resolve(finalFile); // ✅ Now this matches expected type
+        },
+        error: reject,
       });
+    });
 
-      const url = URL.createObjectURL(result);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `resized-image.${options.format}`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error resizing image:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const url = URL.createObjectURL(result);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `resized-image.${options.format}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch (error) {
+    console.error('Error resizing image:', error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="max-w-4xl mx-auto py-10 space-y-6">
@@ -72,9 +81,12 @@ export default function ImageResizerPage() {
       >
         <input {...getInputProps()} />
         <div className="flex flex-col items-center justify-center space-y-3">
-          <svg className="w-12 h-12 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-          </svg>
+         <div style={{ width: '200px', textAlign: 'center' }}>
+  <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+  </svg>
+</div>
+
           <p className="text-lg font-medium">
             {isDragActive ? 'Drop the file here' : 'Drag & drop an image, or click to select'}
           </p>
