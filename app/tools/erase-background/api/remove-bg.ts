@@ -1,6 +1,6 @@
 import formidable from 'formidable';
 import fs from 'fs';
-import axios from 'axios';
+
 import FormData from 'form-data'; // ✅ Use this package
 
 export const config = {
