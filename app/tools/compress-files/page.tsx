@@ -75,7 +75,7 @@ export default function CompressFiles() {
 
       const compressedBlob = await imageCompression(file, options);
 
-      const compressed = new File([compressedBlob], compressed_${file.name}, {
+      const compressed = new File([compressedBlob], `compressed_${file.name}`, {
         type: file.type,
         lastModified: Date.now(),
       });
@@ -188,7 +188,7 @@ export default function CompressFiles() {
 
               {isProcessing && (
                 <div className={styles.progressContainer}>
-                  <div className={styles.progressBar} style={{ width: ${progress}% }}></div>
+                  <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
                   <span className={styles.progressText}>{progress}%</span>
                 </div>
               )}
