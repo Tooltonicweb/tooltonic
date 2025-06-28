@@ -1,6 +1,7 @@
 import formidable from 'formidable';
 import fs from 'fs';
-
+import axios from 'axios';
+import FormData from 'form-data'; // ✅ Use this package
 
 export const config = {
   api: {
@@ -24,16 +25,17 @@ export default async function handler(req, res) {
 
     try {
       const formData = new FormData();
-      formData.append('image_file', fs.createReadStream(imageFile.filepath));
+
+      formData.append('image_file', fs.createReadStream(imageFile.filepath), imageFile.originalFilename); // ✅ Correct
       formData.append('size', fields.size || 'auto');
       formData.append('format', fields.format || 'png');
 
       const response = await axios.post('https://api.remove.bg/v1.0/removebg', formData, {
         headers: {
           'X-Api-Key': process.env.REMOVE_BG_API_KEY,
-          ...formData.getHeaders(),
+          ...formData.getHeaders(), // ✅ required to set correct boundary
         },
-        responseType: 'arraybuffer',
+        responseType: 'arraybuffer', // ✅ To get binary image response
       });
 
       res.setHeader('Content-Type', `image/${fields.format || 'png'}`);
