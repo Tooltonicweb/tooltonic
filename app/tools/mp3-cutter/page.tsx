@@ -1,17 +1,16 @@
+// Updated version with type-safe adsbygoogle fix and ffmpeg imports
+
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
+import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg';
 
 import FileUpload from '../../../components/MP3Cutter/FileUpload';
 import AudioPlayer from '../../../components/MP3Cutter/AudioPlayer';
 import RangeSelector from '../../../components/MP3Cutter/RangeSelector';
 import AdSpace from '../../../components/MP3Cutter/AdSpace';
 import styles from '../../../styles/Home.module.css';
-
-
-let ffmpegInstance = null;
-let fetchFileRef = null;
 
 export default function Home() {
   const [audioFile, setAudioFile] = useState(null);
@@ -27,10 +26,12 @@ export default function Home() {
   const [bitrate, setBitrate] = useState(192);
   const [error, setError] = useState('');
   const audioRef = useRef(null);
+  const ffmpeg = useRef(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      (window as any).adsbygoogle = (window as any).adsbygoogle || [];
+      (window as any).adsbygoogle.push({});
     }
   }, []);
 
@@ -56,50 +57,47 @@ export default function Home() {
     };
   };
 
- const ffmpeg = useRef(null); // Top of component
-
-const handleTrim = async () => {
-  if (!audioFile || startTime >= endTime) {
-    setError('Invalid time range selected');
-    return;
-  }
-
-  setIsProcessing(true);
-
-  try {
-    if (!ffmpeg.current) {
-      ffmpeg.current = createFFmpeg({ log: true }); // Use imported one
+  const handleTrim = async () => {
+    if (!audioFile || startTime >= endTime) {
+      setError('Invalid time range selected');
+      return;
     }
 
-    if (!ffmpeg.current.isLoaded()) {
-      await ffmpeg.current.load();
+    setIsProcessing(true);
+
+    try {
+      if (!ffmpeg.current) {
+        ffmpeg.current = createFFmpeg({ log: true });
+      }
+
+      if (!ffmpeg.current.isLoaded()) {
+        await ffmpeg.current.load();
+      }
+
+      const inputName = 'input.mp3';
+      const outputName = `output.${format}`;
+
+      ffmpeg.current.FS('writeFile', inputName, await fetchFile(audioFile));
+
+      await ffmpeg.current.run(
+        '-i', inputName,
+        '-ss', startTime.toString(),
+        '-to', endTime.toString(),
+        '-b:a', `${bitrate}k`,
+        outputName
+      );
+
+      const data = ffmpeg.current.FS('readFile', outputName);
+      const blob = new Blob([data.buffer], { type: `audio/${format}` });
+      const url = URL.createObjectURL(blob);
+
+      setTrimmedAudioUrl(url);
+    } catch (err) {
+      setError('Error processing audio: ' + err.message);
+    } finally {
+      setIsProcessing(false);
     }
-
-    const inputName = 'input.mp3';
-    const outputName = `output.${format}`;
-
-    ffmpeg.current.FS('writeFile', inputName, await fetchFile(audioFile));
-
-    await ffmpeg.current.run(
-      '-i', inputName,
-      '-ss', startTime.toString(),
-      '-to', endTime.toString(),
-      '-b:a', `${bitrate}k`,
-      outputName
-    );
-
-    const data = ffmpeg.current.FS('readFile', outputName);
-    const blob = new Blob([data.buffer], { type: `audio/${format}` });
-    const url = URL.createObjectURL(blob);
-
-    setTrimmedAudioUrl(url);
-  } catch (err) {
-    setError('Error processing audio: ' + err.message);
-  } finally {
-    setIsProcessing(false);
-  }
-};
-
+  };
 
   const handleDownload = () => {
     if (!trimmedAudioUrl) return;
@@ -113,13 +111,11 @@ const handleTrim = async () => {
 
   const handleShare = () => {
     if (navigator.share) {
-      navigator
-        .share({
-          title: 'Check out this trimmed audio from ToolTonic',
-          text: 'I just trimmed an audio file using ToolTonic - AI Powered File First Aid',
-          url: window.location.href,
-        })
-        .catch(console.log);
+      navigator.share({
+        title: 'Check out this trimmed audio from ToolTonic',
+        text: 'I just trimmed an audio file using ToolTonic - AI Powered File First Aid',
+        url: window.location.href,
+      }).catch(console.log);
     } else {
       alert('Web Share API not supported in your browser. Copy the URL manually.');
     }
