@@ -5,6 +5,15 @@ export default function FileUploader({ onFilesUpload }) {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
 
+  const handleFiles = useCallback((files) => {
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    if (imageFiles.length === 0) {
+      alert('Please upload only image files (JPEG, PNG, etc.)');
+      return;
+    }
+    onFilesUpload(imageFiles);
+  }, [onFilesUpload]);
+
   const handleDragEnter = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -28,21 +37,12 @@ export default function FileUploader({ onFilesUpload }) {
     setIsDragging(false);
     const files = Array.from(e.dataTransfer.files);
     handleFiles(files);
-  }, []);
+  }, [handleFiles]);
 
   const handleFileInputChange = useCallback((e) => {
     const files = Array.from(e.target.files);
     handleFiles(files);
-  }, []);
-
-  const handleFiles = (files) => {
-    const imageFiles = files.filter(file => file.type.startsWith('image/'));
-    if (imageFiles.length === 0) {
-      alert('Please upload only image files (JPEG, PNG, etc.)');
-      return;
-    }
-    onFilesUpload(imageFiles);
-  };
+  }, [handleFiles]);
 
   const triggerFileInput = useCallback(() => {
     fileInputRef.current.click();
