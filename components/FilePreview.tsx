@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
+// ✅ Exporting props interface
 export interface FilePreviewProps {
   originalFile: File | null;
   compressedFile: File | null;
@@ -17,6 +18,7 @@ export interface FilePreviewProps {
   };
 }
 
+// ✅ Using props interface
 export default function FilePreview({
   originalFile,
   compressedFile,
