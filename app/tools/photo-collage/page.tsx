@@ -42,10 +42,19 @@ export default function Home() {
     <div className={styles.container}>
       <Head>
         <title>Free Photo Collage Maker | ToolTonic - AI Powered File First Aid</title>
-        <meta name="description" content="Create beautiful photo collages online for free with ToolTonic's AI-powered collage maker. No registration required." />
-        <meta name="keywords" content="photo collage, collage maker, free collage, online collage, picture collage, photo grid" />
+        <meta
+          name="description"
+          content="Create beautiful photo collages online for free with ToolTonic&apos;s AI-powered collage maker. No registration required."
+        />
+        <meta
+          name="keywords"
+          content="photo collage, collage maker, free collage, online collage, picture collage, photo grid"
+        />
         <meta property="og:title" content="Free Photo Collage Maker | ToolTonic" />
-        <meta property="og:description" content="Create beautiful photo collages online for free with ToolTonic's AI-powered collage maker." />
+        <meta
+          property="og:description"
+          content="Create beautiful photo collages online for free with ToolTonic&apos;s AI-powered collage maker."
+        />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tooltonic.io/photo-collage" />
         <meta property="og:image" content="https://tooltonic.io/images/collage-maker-preview.jpg" />
@@ -54,11 +63,12 @@ export default function Home() {
       </Head>
 
       <AdBanner position="top" />
-    
 
       <main className={styles.main}>
         <h1 className={styles.title}>AI-Powered Photo Collage Maker</h1>
-        <p className={styles.subtitle}>Create stunning collages in seconds with ToolTonic's free online tool</p>
+        <p className={styles.subtitle}>
+          Create stunning collages in seconds with ToolTonic&apos;s free online tool
+        </p>
 
         <div className={styles.toolContainer}>
           <FileUploader onFilesUpload={handleFilesUpload} />
@@ -101,7 +111,6 @@ export default function Home() {
       </main>
 
       <AdBanner position="bottom" />
-    
     </div>
   );
 }
