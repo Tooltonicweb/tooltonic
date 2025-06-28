@@ -66,10 +66,9 @@ export default function PricingPage() {
       />
 
       <section className="container mx-auto px-4 py-12 animate-fade">
-        <h1 className="text-3xl font-bold text-center mb-6 text-primary">Pricing</h1>
+        <h1 className="text-3xl font-bold text-center mb-6 text-primary">MP3 Cutter</h1>
         
       </section>
     </>
   );
 }
-
