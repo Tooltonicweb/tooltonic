@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import styles from '../../../styles/compress.module.css';
 import AdBanner from '../../../components/AdBanner';
-import FilePreview, { FilePreviewProps } from '../../../components/FilePreview';
+import FilePreview from '../../../components/FilePreview';
 import CompressionControls from '../../../components/CompressionControls';
 import SocialShare from '../../../components/SocialShare';
 import { FaBolt, FaShieldAlt, FaSlidersH, FaMobileAlt } from 'react-icons/fa';
@@ -75,7 +75,7 @@ export default function CompressFiles() {
 
       const compressedBlob = await imageCompression(file, options);
 
-      const compressed = new File([compressedBlob], `compressed_${file.name}`, {
+      const compressed = new File([compressedBlob], compressed_${file.name}, {
         type: file.type,
         lastModified: Date.now(),
       });
@@ -188,14 +188,14 @@ export default function CompressFiles() {
 
               {isProcessing && (
                 <div className={styles.progressContainer}>
-                  <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
+                  <div className={styles.progressBar} style={{ width: ${progress}% }}></div>
                   <span className={styles.progressText}>{progress}%</span>
                 </div>
               )}
 
               {compressedFile && (
                 <div className={styles.resultsSection}>
-                  
+                  <FilePreview originalFile={file} compressedFile={compressedFile} settings={settings} />
                   <div className={styles.actionButtons}>
                     <button className={styles.downloadButton} onClick={handleDownload}>Download Compressed File</button>
                     <SocialShare fileName={compressedFile.name} fileType={compressedFile.type} />
