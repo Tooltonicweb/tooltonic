@@ -195,7 +195,7 @@ export default function CompressFiles() {
 
               {compressedFile && (
                 <div className={styles.resultsSection}>
-                  <FilePreview originalFile={file} compressedFile={compressedFile} settings={settings} />
+                  
                   <div className={styles.actionButtons}>
                     <button className={styles.downloadButton} onClick={handleDownload}>Download Compressed File</button>
                     <SocialShare fileName={compressedFile.name} fileType={compressedFile.type} />
