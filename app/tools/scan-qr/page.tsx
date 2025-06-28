@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const QrScanner = dynamic(() => import('qr-scanner'), { ssr: false });
@@ -147,9 +148,16 @@ export default function QRScannerPage() {
     return () => {
       scanner?.stop();
       scanner?.destroy();
-      if (filePreview) URL.revokeObjectURL(filePreview);
     };
   }, []);
+
+  useEffect(() => {
+    if (filePreview) {
+      return () => {
+        URL.revokeObjectURL(filePreview);
+      };
+    }
+  }, [filePreview]);
 
   useEffect(() => {
     if (darkMode) {
@@ -197,7 +205,14 @@ export default function QRScannerPage() {
         >
           {filePreview ? (
             <div className="relative">
-              <img src={filePreview} alt="QR preview" className="max-h-64 mx-auto mb-4 rounded" />
+              <Image
+                src={filePreview}
+                alt="QR preview"
+                width={400}
+                height={400}
+                className="mx-auto mb-4 rounded"
+                unoptimized
+              />
               <button
                 onClick={(e) => {
                   e.stopPropagation();
