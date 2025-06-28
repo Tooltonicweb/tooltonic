@@ -1,0 +1,184 @@
+.previewPanel {
+background: white;
+border-radius: 8px;
+padding: 1.5rem;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.previewHeader {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1rem;
+}
+
+.previewTitle {
+margin: 0;
+color: #2c3e50;
+font-size: 1.2rem;
+}
+
+.viewToggle {
+display: flex;
+gap: 0.5rem;
+}
+
+.viewButton {
+background: none;
+border: 1px solid #ddd;
+border-radius: 4px;
+padding: 0.25rem 0.75rem;
+font-size: 0.9rem;
+cursor: pointer;
+transition: all 0.2s;
+}
+
+.viewButton.active {
+background-color: #3498db;
+color: white;
+border-color: #3498db;
+}
+
+.imageGrid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+gap: 1rem;
+}
+
+.imageItem {
+position: relative;
+aspect-ratio: 1;
+
+border-radius: 5px;
+overflow: hidden;
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.imageItem:hover {
+transform: translateY(-2px);
+box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.imageItem.selected {
+box-shadow: 0 0 0 3px #3498db;
+}
+
+.imageThumbnail {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.selectedBadge {
+position: absolute;
+top: 0.5rem;
+right: 0.5rem;
+
+width: 1.5rem;
+height: 1.5rem;
+background-color: #3498db;
+color: white;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+.imageList {
+display: flex;
+flex-direction: column;
+gap: 0.5rem;
+}
+
+.listItem {
+display: flex;
+align-items: center;
+gap: 1rem;
+padding: 0.5rem;
+border-radius: 5px;
+cursor: pointer;
+transition: background-color 0.2s;
+}
+
+.listItem:hover {
+background-color: #f5f5f5;
+}
+
+.listItem.selected {
+background-color: rgba(52, 152, 219, 0.1);
+}
+
+.listItemCheckbox {
+width: 1.25rem;
+height: 1.25rem;
+border: 2px solid #3498db;
+border-radius: 4px;
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+background-color: #3498db;
+flex-shrink: 0;
+}
+
+.emptyCheckbox {
+width: 100%;
+height: 100%;
+
+border: 2px solid #bdc3c7;
+border-radius: 3px;
+}
+
+.listThumbnail {
+width: 50px;
+height: 50px;
+object-fit: cover;
+border-radius: 4px;
+flex-shrink: 0;
+}
+
+.listInfo {
+flex: 1;
+min-width: 0;
+}
+
+.listName {
+font-weight: 500;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+.listSize {
+
+font-size: 0.8rem;
+color: #7f8c8d;
+}
+
+.collagePreview {
+margin-top: 2rem;
+}
+
+.previewContainer {
+display: flex;
+justify-content: center;
+margin-top: 1rem;
+}
+
+.collageImage {
+max-width: 100%;
+max-height: 400px;
+object-fit: contain;
+box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+.imageGrid {
+grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+
+.previewPanel {
+padding: 1rem;
+}
+}

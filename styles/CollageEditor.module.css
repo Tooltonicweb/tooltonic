@@ -1,0 +1,70 @@
+.editorContainer {
+width: 100%;
+}
+
+.editorGrid {
+display: grid;
+grid-template-columns: 300px 1fr;
+gap: 1.5rem;
+}
+
+.settingsColumn {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+}
+
+.previewColumn {
+display: flex;
+flex-direction: column;
+gap: 1.5rem;
+}
+
+.outputActions {
+display: flex;
+justify-content: space-between;
+
+align-items: center;
+gap: 1rem;
+margin-top: 1rem;
+}
+
+.downloadButton {
+background-color: #3498db;
+color: white;
+border: none;
+border-radius: 5px;
+padding: 0.75rem 1.5rem;
+font-size: 1rem;
+font-weight: 500;
+cursor: pointer;
+transition: background-color 0.2s;
+flex: 1;
+max-width: 200px;
+}
+
+.downloadButton:hover {
+background-color: #2980b9;
+}
+
+.downloadButton:disabled {
+background-color: #95a5a6;
+
+cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+.editorGrid {
+grid-template-columns: 1fr;
+}
+
+.outputActions {
+flex-direction: column;
+gap: 0.5rem;
+}
+
+.downloadButton {
+max-width: 100%;
+width: 100%;
+}
+}

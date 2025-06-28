@@ -8,6 +8,7 @@ import FilePreview from '../../../components/FilePreview';
 import CompressionControls from '../../../components/CompressionControls';
 import SocialShare from '../../../components/SocialShare';
 import { FaBolt, FaShieldAlt, FaSlidersH, FaMobileAlt } from 'react-icons/fa';
+import imageCompression from 'browser-image-compression';
 
 export default function CompressFiles() {
   const [file, setFile] = useState(null);
@@ -17,12 +18,13 @@ export default function CompressFiles() {
   const [settings, setSettings] = useState({
     format: 'original',
     quality: 80,
-    width: null,
+    width: 1920,
     height: null,
     maintainRatio: true,
     brightness: 100,
     contrast: 100,
   });
+
   const fileInputRef = useRef(null);
   const dropZoneRef = useRef(null);
 
@@ -39,8 +41,8 @@ export default function CompressFiles() {
   };
 
   const processFile = (file) => {
-    if (!file.type.match('image.*') && !file.type.match('application/pdf')) {
-      alert('Please upload an image or PDF file');
+    if (!file.type.match('image.*')) {
+      alert('Please upload an image file (JPG, PNG, etc)');
       return;
     }
     setFile(file);
@@ -63,19 +65,30 @@ export default function CompressFiles() {
       });
     }, 200);
 
-    setTimeout(() => {
-      clearInterval(interval);
-      setProgress(100);
-      setIsProcessing(false);
+    try {
+      const options = {
+        maxSizeMB: 1,
+        maxWidthOrHeight: settings.width || 1920,
+        useWebWorker: true,
+        initialQuality: settings.quality / 100,
+      };
 
-      const compressedBlob = new Blob([file], { type: file.type });
-      const compressedFile = new File([compressedBlob], `compressed_${file.name}`, {
+      const compressedBlob = await imageCompression(file, options);
+
+      const compressed = new File([compressedBlob], `compressed_${file.name}`, {
         type: file.type,
         lastModified: Date.now(),
       });
 
-      setCompressedFile(compressedFile);
-    }, 2000);
+      setCompressedFile(compressed);
+      setProgress(100);
+    } catch (error) {
+      console.error("Compression failed:", error);
+      alert("Compression failed. Please try again.");
+    } finally {
+      clearInterval(interval);
+      setIsProcessing(false);
+    }
   };
 
   const handleDownload = () => {
@@ -139,15 +152,15 @@ export default function CompressFiles() {
               type="file"
               ref={fileInputRef}
               onChange={handleFileChange}
-              accept="image/*,application/pdf"
+              accept="image/*"
               className={styles.fileInput}
             />
             <div className={styles.dropContent}>
               <svg className={styles.uploadIcon} viewBox="0 0 24 24">
                 <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
               </svg>
-              <p>Drag & drop your file here or click to browse</p>
-              <p className={styles.supportedFormats}>Supported formats: JPG, PNG, GIF, PDF</p>
+              <p>Drag & drop your image here or click to browse</p>
+              <p className={styles.supportedFormats}>Supported formats: JPG, PNG, GIF</p>
             </div>
           </div>
 

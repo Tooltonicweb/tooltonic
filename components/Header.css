@@ -1,0 +1,156 @@
+/* Header.css */
+
+.header-container {
+  position: fixed;
+  width: 100%;
+  z-index: 50;
+  transition: all 0.3s ease;
+  background-color: white;
+}
+
+.header-container.dark {
+  background-color: #1a1a1a;
+  color: white;
+}
+
+.header-container.scrolled {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-bar {
+  font-size: 12px;
+  text-align: center;
+  padding: 4px 0;
+  background-color: #f2f2f2;
+}
+
+.top-bar.dark {
+  background-color: #333;
+  color: #aaa;
+}
+
+.nav-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo-icon {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  color: white;
+  font-weight: bold;
+  font-size: 1.25rem;
+  padding: 10px;
+  border-radius: 8px;
+  margin-right: 8px;
+}
+
+.logo-text h1 {
+  font-size: 1.25rem;
+  margin: 0;
+}
+
+.logo-text p {
+  font-size: 0.75rem;
+  margin: 0;
+  color: gray;
+}
+
+.desktop-nav a {
+  margin: 0 12px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.desktop-nav a:hover {
+  color: #3b82f6;
+}
+
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-signin,
+.btn-register {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+.btn-signin:hover {
+  color: #3b82f6;
+}
+
+.btn-register {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  color: white;
+}
+
+.btn-register:hover {
+  opacity: 0.9;
+}
+
+.mobile-toggle {
+  display: none;
+  background: none;
+  border: none;
+}
+
+.icon {
+  height: 24px;
+  width: 24px;
+}
+
+.mobile-nav {
+  display: none;
+  flex-direction: column;
+  background: white;
+  padding: 1rem;
+}
+
+.mobile-nav nav a {
+  padding: 8px 0;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+}
+
+.mobile-register {
+  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  color: white;
+  text-align: center;
+  padding: 6px;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+}
+
+.divider {
+  height: 1px;
+  background: #e5e5e5;
+  margin: 10px 0;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav {
+    display: none;
+  }
+  .mobile-toggle {
+    display: inline-block;
+  }
+  .mobile-nav {
+    display: flex;
+  }
+}

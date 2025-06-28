@@ -1,8 +1,23 @@
-export default function CompressionControls({ settings, onSettingsChange, onCompress, isProcessing }) {
+'use client';
+
+interface CompressionControlsProps {
+  settings: { quality: number };
+  onSettingsChange: (settings: { quality: number }) => void;
+  onCompress: () => void;
+  isProcessing: boolean;
+}
+
+export default function CompressionControls({
+  settings,
+  onSettingsChange,
+  onCompress,
+  isProcessing,
+}: CompressionControlsProps) {
   return (
     <div style={{ marginTop: 20 }}>
       <h3>Compression Settings</h3>
-      <label>Quality: {settings.quality}
+      <label>
+        Quality: {settings.quality}
         <input
           type="range"
           min="10"

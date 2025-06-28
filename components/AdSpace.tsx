@@ -9,7 +9,7 @@ interface AdSpaceProps {
 
 export default function AdSpace({ type }: AdSpaceProps) {
   const [isClient, setIsClient] = useState(false);
-  const adLoaded = useRef(false); // 👈 track if already pushed
+  const adLoaded = useRef(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -17,14 +17,22 @@ export default function AdSpace({ type }: AdSpaceProps) {
 
   useEffect(() => {
     if (isClient && !adLoaded.current) {
-      try {
-        if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
-          (window as any).adsbygoogle.push({});
-          adLoaded.current = true; // 👈 mark as loaded
+      const interval = setInterval(() => {
+        try {
+          if (
+            typeof window !== 'undefined' &&
+            Array.isArray((window as any).adsbygoogle)
+          ) {
+            (window as any).adsbygoogle.push({});
+            adLoaded.current = true;
+            clearInterval(interval);
+          }
+        } catch (err) {
+          console.error('Adsense error:', err);
         }
-      } catch (err) {
-        console.error("Adsense error:", err);
-      }
+      }, 500);
+
+      return () => clearInterval(interval);
     }
   }, [isClient]);
 
@@ -47,7 +55,8 @@ export default function AdSpace({ type }: AdSpaceProps) {
         data-ad-slot={type === 'horizontal' ? '1234567890' : '0987654321'}
         data-ad-format={type === 'horizontal' ? 'auto' : 'vertical'}
         data-full-width-responsive="true"
-      />
+      ></ins>
+
       <div className="text-center p-4 text-gray-500">Advertisement</div>
     </div>
   );

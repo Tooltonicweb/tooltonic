@@ -1,0 +1,72 @@
+.adBanner {
+width: 100%;
+display: flex;
+justify-content: center;
+background-color: #f5f5f5;
+padding: 0.5rem 0;
+}
+
+.adBanner.top {
+margin-bottom: 1rem;
+}
+
+.adBanner.bottom {
+margin-top: 1rem;
+}
+
+.adBanner.left, .adBanner.right {
+position: fixed;
+top: 0;
+height: 100vh;
+width: auto;
+padding: 1rem 0.5rem;
+z-index: 1000;
+display: flex;
+align-items: center;
+
+}
+
+.adBanner.left {
+left: 0;
+}
+
+.adBanner.right {
+right: 0;
+}
+
+.adContainer {
+background-color: white;
+border: 1px solid #e0e0e0;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.adContainer.horizontal {
+width: 728px;
+height: 90px;
+}
+
+.adContainer.vertical {
+width: 160px;
+
+height: 600px;
+}
+
+.adPlaceholder {
+color: #999;
+font-size: 0.9rem;
+}
+
+@media (max-width: 1200px) {
+.adBanner.left, .adBanner.right {
+display: none;
+}
+}
+
+@media (max-width: 768px) {
+.adContainer.horizontal {
+width: 320px;
+height: 50px;
+}
+}
