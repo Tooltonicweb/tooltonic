@@ -1,3 +1,5 @@
+'use client';
+import Link from 'next/link';
 import styles from '../../styles/Home.module.css';
 
 const Footer = () => {
@@ -13,10 +15,10 @@ const Footer = () => {
         <div className={styles.footerSection}>
           <h4>Quick Links</h4>
           <ul className={styles.footerLinks}>
-            <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/privacy">Privacy Policy</a></li>
-            <li><a href="/terms">Terms of Service</a></li>
+            <li><Link href="/">Home</Link></li>
+            <li><Link href="/about">About</Link></li>
+            <li><Link href="/privacy">Privacy Policy</Link></li>
+            <li><Link href="/terms">Terms of Service</Link></li>
           </ul>
         </div>
 
