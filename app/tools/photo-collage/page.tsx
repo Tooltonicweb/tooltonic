@@ -13,7 +13,7 @@ import generateCollage from '../../../components/PhotoCollage/generateCollage';
 export default function Home() {
   const [files, setFiles] = useState<File[]>([]);
   const [collageUrl, setCollageUrl] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [settings, setSettings] = useState({
     layout: 'grid',
     rows: 2,
@@ -32,13 +32,9 @@ export default function Home() {
   const handleGenerateCollage = async () => {
     setIsProcessing(true);
     const collageBlob = await generateCollage(files, settings);
-
     if (collageBlob && collageBlob instanceof Blob) {
       setCollageUrl(URL.createObjectURL(collageBlob));
-    } else {
-      console.error('Failed to generate a valid Blob');
     }
-
     setIsProcessing(false);
   };
 
@@ -57,7 +53,7 @@ export default function Home() {
         <meta property="og:title" content="Free Photo Collage Maker | ToolTonic" />
         <meta
           property="og:description"
-          content="Create beautiful photo collages online for free with ToolTonic's AI-powered collage maker."
+          content="Create beautiful photo collages online for free with ToolTonic&apos;s AI-powered collage maker."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tooltonic.io/photo-collage" />
@@ -71,7 +67,7 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>AI-Powered Photo Collage Maker</h1>
         <p className={styles.subtitle}>
-          Create stunning collages in seconds with ToolTonic's free online tool
+          Create stunning collages in seconds with ToolTonic&apos;s free online tool
         </p>
 
         <div className={styles.toolContainer}>
