@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
-import { createFFmpeg, fetchFile } from '@ffmpeg/ffmpeg'; // ✅ Correct Import
+
 import FileUpload from '../../../components/MP3Cutter/FileUpload';
 import AudioPlayer from '../../../components/MP3Cutter/AudioPlayer';
 import RangeSelector from '../../../components/MP3Cutter/RangeSelector';
