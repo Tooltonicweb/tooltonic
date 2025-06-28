@@ -3,18 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-
-const QrScanner = dynamic(() => import('qr-scanner'), { ssr: false });
-
-// ✅ Declare adsbygoogle on the window object
-declare global {
-  interface Window {
-    adsbygoogle?: any[];
-  }
-}
 
 export default function QRScannerPage() {
   const pathname = usePathname();
@@ -31,6 +21,8 @@ export default function QRScannerPage() {
   const initScanner = async () => {
     try {
       if (!videoRef.current) return;
+
+      const { default: QrScanner } = await import('qr-scanner');
       const scanner = new QrScanner(
         videoRef.current,
         result => {
@@ -72,7 +64,7 @@ export default function QRScannerPage() {
   };
 
   const handleFileUpload = async (event: any) => {
-    const file = event.target.files?.[0] || event.dataTransfer?.files?.[0];
+    const file = event.target?.files?.[0] || event.dataTransfer?.files?.[0];
     if (!file) return;
 
     setError('');
@@ -82,8 +74,8 @@ export default function QRScannerPage() {
       const previewUrl = URL.createObjectURL(file);
       setFilePreview(previewUrl);
 
-      const qrScannerModule = await import('qr-scanner');
-      const result = await qrScannerModule.default.scanImage(file, {
+      const { default: QrScanner } = await import('qr-scanner');
+      const result = await QrScanner.scanImage(file, {
         returnDetailedScanResult: true,
       });
 
@@ -138,7 +130,7 @@ export default function QRScannerPage() {
           mode: 'no-cors',
         });
         setAdBlockDetected(false);
-      } catch (e) {
+      } catch {
         setAdBlockDetected(true);
       }
     };
@@ -175,8 +167,9 @@ export default function QRScannerPage() {
   }, [darkMode]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && 'adsbygoogle' in window) {
       try {
+        // @ts-ignore
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       } catch (e) {
         console.error('Adsense push failed:', e);
