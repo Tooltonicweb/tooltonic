@@ -3,11 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
-import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-
-const QrScanner = dynamic(() => import('qr-scanner'), { ssr: false });
 
 export default function QRScannerPage() {
   const pathname = usePathname();
@@ -24,6 +21,9 @@ export default function QRScannerPage() {
   const initScanner = async () => {
     try {
       if (!videoRef.current) return;
+
+      const QrScanner = (await import('qr-scanner')).default;
+
       const scanner = new QrScanner(
         videoRef.current,
         result => {
@@ -39,6 +39,7 @@ export default function QRScannerPage() {
           returnDetailedScanResult: true,
         }
       );
+
       setQrScanner(scanner);
       return scanner;
     } catch (err) {
