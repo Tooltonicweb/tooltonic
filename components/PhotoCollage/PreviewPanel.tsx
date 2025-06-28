@@ -1,4 +1,7 @@
+'use client';
+
 import { useState } from 'react';
+import Image from 'next/image';
 import styles from '../../styles/PreviewPanel.module.css';
 
 export default function PreviewPanel({
@@ -6,7 +9,7 @@ export default function PreviewPanel({
   selectedImages,
   onImageSelect,
   previewUrl,
-  settings
+  settings,
 }) {
   const [viewMode, setViewMode] = useState('grid');
 
@@ -42,7 +45,14 @@ export default function PreviewPanel({
                 className={`${styles.imageItem} ${isSelected ? styles.selected : ''}`}
                 onClick={() => onImageSelect(file, !isSelected)}
               >
-                <img src={url} alt={`Preview ${index + 1}`} className={styles.imageThumbnail} />
+                <Image
+                  src={url}
+                  alt={`Preview ${index + 1}`}
+                  width={150}
+                  height={150}
+                  className={styles.imageThumbnail}
+                  unoptimized
+                />
                 {isSelected && (
                   <div className={styles.selectedBadge}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -83,7 +93,14 @@ export default function PreviewPanel({
                     <div className={styles.emptyCheckbox} />
                   )}
                 </div>
-                <img src={url} alt={`Preview ${index + 1}`} className={styles.listThumbnail} />
+                <Image
+                  src={url}
+                  alt={`Preview ${index + 1}`}
+                  width={80}
+                  height={80}
+                  className={styles.listThumbnail}
+                  unoptimized
+                />
                 <div className={styles.listInfo}>
                   <div className={styles.listName}>{file.name}</div>
                   <div className={styles.listSize}>{(file.size / 1024).toFixed(1)} KB</div>
@@ -98,15 +115,18 @@ export default function PreviewPanel({
         <div className={styles.collagePreview}>
           <h3 className={styles.previewTitle}>Collage Preview</h3>
           <div className={styles.previewContainer}>
-            <img
+            <Image
               src={previewUrl}
               alt="Generated collage preview"
+              width={600}
+              height={400}
               className={styles.collageImage}
               style={{
                 borderRadius: `${settings.borderRadius}px`,
                 backgroundColor: settings.backgroundColor,
-                padding: `${settings.spacing}px`
+                padding: `${settings.spacing}px`,
               }}
+              unoptimized
             />
           </div>
         </div>
