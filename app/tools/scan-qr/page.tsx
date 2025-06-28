@@ -3,14 +3,24 @@
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
+const QrScanner = dynamic(() => import('qr-scanner'), { ssr: false });
+
+// ✅ Declare adsbygoogle on the window object
+declare global {
+  interface Window {
+    adsbygoogle?: any[];
+  }
+}
+
 export default function QRScannerPage() {
   const pathname = usePathname();
-  const videoRef = useRef(null);
-  const fileInputRef = useRef(null);
-  const [qrScanner, setQrScanner] = useState(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [qrScanner, setQrScanner] = useState<any>(null);
   const [scanResult, setScanResult] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState('');
@@ -21,9 +31,6 @@ export default function QRScannerPage() {
   const initScanner = async () => {
     try {
       if (!videoRef.current) return;
-
-      const QrScanner = (await import('qr-scanner')).default;
-
       const scanner = new QrScanner(
         videoRef.current,
         result => {
@@ -39,7 +46,6 @@ export default function QRScannerPage() {
           returnDetailedScanResult: true,
         }
       );
-
       setQrScanner(scanner);
       return scanner;
     } catch (err) {
@@ -65,7 +71,7 @@ export default function QRScannerPage() {
     }
   };
 
-  const handleFileUpload = async (event) => {
+  const handleFileUpload = async (event: any) => {
     const file = event.target.files?.[0] || event.dataTransfer?.files?.[0];
     if (!file) return;
 
@@ -92,12 +98,12 @@ export default function QRScannerPage() {
     }
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     handleFileUpload(e);
@@ -140,7 +146,7 @@ export default function QRScannerPage() {
   }, []);
 
   useEffect(() => {
-    let scanner;
+    let scanner: any;
     const loadScanner = async () => {
       scanner = await initScanner();
     };
@@ -169,7 +175,7 @@ export default function QRScannerPage() {
   }, [darkMode]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.adsbygoogle) {
+    if (typeof window !== 'undefined') {
       try {
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       } catch (e) {
