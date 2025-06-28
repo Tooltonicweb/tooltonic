@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { toCanvas } from 'qrcode'
 import { Toaster, toast } from 'react-hot-toast'
 
@@ -15,7 +15,7 @@ export default function QRGenerator() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const downloadLinkRef = useRef<HTMLAnchorElement | null>(null)
 
-  const generateQR = async () => {
+  const generateQR = useCallback(async () => {
     if (!text.trim()) {
       toast.error('Please enter text or URL')
       return
@@ -49,11 +49,11 @@ export default function QRGenerator() {
     } finally {
       setIsGenerating(false)
     }
-  }
+  }, [text, size, bgColor, fgColor, format])
 
   useEffect(() => {
     generateQR()
-  }, [])
+  }, [generateQR])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -262,7 +262,7 @@ export default function QRGenerator() {
         <ol className="list-decimal pl-5 space-y-1 text-sm text-gray-600">
           <li>Enter the text or URL you want to encode</li>
           <li>Customize the size, colors, and format</li>
-          <li>Click "Generate QR Code"</li>
+          <li>Click &quot;Generate QR Code&quot;</li>
           <li>Download or share your QR code</li>
         </ol>
       </div>
