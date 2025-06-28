@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-interface FilePreviewProps {
+export interface FilePreviewProps {
   originalFile: File | null;
   compressedFile: File | null;
   settings?: {
