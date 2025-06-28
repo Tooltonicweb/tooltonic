@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import styles from '../../../styles/compress.module.css';
 import AdBanner from '../../../components/AdBanner';
-import FilePreview from '../../../components/FilePreview';
+import FilePreview, { FilePreviewProps } from '../../../components/FilePreview';
 import CompressionControls from '../../../components/CompressionControls';
 import SocialShare from '../../../components/SocialShare';
 import { FaBolt, FaShieldAlt, FaSlidersH, FaMobileAlt } from 'react-icons/fa';
