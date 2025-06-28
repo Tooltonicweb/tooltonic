@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import Image from 'next/image';
 import { useDropzone } from 'react-dropzone';
 import Compressor from 'compressorjs'; // ✅ No curly braces!
 
@@ -98,7 +99,10 @@ export default function ImageResizerPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <h3 className="font-medium">Original Image</h3>
-            <img src={preview} alt="Original" className="w-full rounded-lg border" />
+            
+
+            <Image src={preview} alt="Original" width={800} height={600} className="w-full rounded-lg border" unoptimized // 👈 important if image is dynamic from browser />
+
             <p className="text-sm text-gray-500">
               Size: {(file?.size / 1024).toFixed(2)} KB
             </p>
