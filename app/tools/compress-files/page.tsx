@@ -1,253 +1,271 @@
-'use client';
+'use client'
 
-import { useState, useRef, useEffect } from 'react';
-import Head from 'next/head';
-import styles from '../../../styles/compress.module.css';
-import AdBanner from '../../../components/AdBanner';
-import FilePreview from '../../../components/FilePreview';
-import CompressionControls from '../../../components/CompressionControls';
-import SocialShare from '../../../components/SocialShare';
-import { FaBolt, FaShieldAlt, FaSlidersH, FaMobileAlt } from 'react-icons/fa';
-import imageCompression from 'browser-image-compression';
+import { useState, useRef, useEffect, useCallback } from 'react'
+import { toCanvas } from 'qrcode'
+import { Toaster, toast } from 'react-hot-toast'
 
-export default function CompressFiles() {
-  const [file, setFile] = useState(null);
-  const [compressedFile, setCompressedFile] = useState(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [settings, setSettings] = useState({
-    format: 'original',
-    quality: 80,
-    width: 1920,
-    height: null,
-    maintainRatio: true,
-    brightness: 100,
-    contrast: 100,
-  });
+export default function QRGenerator() {
+  const [text, setText] = useState('https://tooltonic.io')
+  const [size, setSize] = useState(200)
+  const [bgColor, setBgColor] = useState('#ffffff')
+  const [fgColor, setFgColor] = useState('#000000')
+  const [format, setFormat] = useState<'png' | 'jpeg' | 'webp'>('png')
+  const [qrImage, setQrImage] = useState('')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const downloadLinkRef = useRef<HTMLAnchorElement | null>(null)
 
-  const fileInputRef = useRef(null);
-  const dropZoneRef = useRef(null);
-
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile) processFile(droppedFile);
-  };
-
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) processFile(selectedFile);
-  };
-
-  const processFile = (file) => {
-    if (!file.type.match('image.*')) {
-      alert('Please upload an image file (JPG, PNG, etc)');
-      return;
+  const generateQR = useCallback(async () => {
+    if (!text.trim()) {
+      toast.error('Please enter text or URL')
+      return
     }
-    setFile(file);
-    setCompressedFile(null);
-    setProgress(0);
-  };
 
-  const handleCompress = async () => {
-    if (!file) return;
-    setIsProcessing(true);
-    setProgress(0);
-
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 90) {
-          clearInterval(interval);
-          return prev;
-        }
-        return prev + 10;
-      });
-    }, 200);
+    setIsGenerating(true)
 
     try {
       const options = {
-        maxSizeMB: 1,
-        maxWidthOrHeight: settings.width || 1920,
-        useWebWorker: true,
-        initialQuality: settings.quality / 100,
-      };
+        width: size,
+        margin: 2,
+        color: {
+          dark: fgColor,
+          light: bgColor
+        }
+      }
 
-      const compressedBlob = await imageCompression(file, options);
+      if (canvasRef.current) {
+        await toCanvas(canvasRef.current, text, options)
+        const dataUrl = canvasRef.current.toDataURL(`image/${format}`)
+        setQrImage(dataUrl)
 
-      const compressed = new File([compressedBlob], `compressed_${file.name}`, {
-        type: file.type,
-        lastModified: Date.now(),
-      });
-
-      setCompressedFile(compressed);
-      setProgress(100);
-    } catch (error) {
-      console.error("Compression failed:", error);
-      alert("Compression failed. Please try again.");
+        if (downloadLinkRef.current) {
+          downloadLinkRef.current.href = dataUrl
+          downloadLinkRef.current.download = `tooltonic-qr-code.${format}`
+        }
+      }
+    } catch (err) {
+      console.error(err)
+      toast.error('Failed to generate QR code')
     } finally {
-      clearInterval(interval);
-      setIsProcessing(false);
+      setIsGenerating(false)
     }
-  };
-
-  const handleDownload = () => {
-    if (!compressedFile) return;
-    const url = URL.createObjectURL(compressedFile);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = compressedFile.name;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
-
-  const handleSettingsChange = (newSettings) => {
-    setSettings((prev) => ({ ...prev, ...newSettings }));
-  };
+  }, [text, size, bgColor, fgColor, format])
 
   useEffect(() => {
-    const preventDefaults = (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-    };
-    const dropZone = dropZoneRef.current;
-    if (dropZone) {
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
-        dropZone.addEventListener(eventName, preventDefaults, false);
-      });
-    }
-    return () => {
-      if (dropZone) {
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach((eventName) => {
-          dropZone.removeEventListener(eventName, preventDefaults, false);
-        });
-      }
-    };
-  }, []);
+    generateQR()
+  }, [generateQR])
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    generateQR()
+  }
+
+  const copyToClipboard = () => {
+    if (!qrImage || !canvasRef.current) return
+
+    canvasRef.current.toBlob((blob) => {
+      if (!blob) return
+      const item = new ClipboardItem({ [`image/${format}`]: blob })
+      navigator.clipboard.write([item])
+        .then(() => toast.success('Copied to clipboard!'))
+        .catch(() => toast.error('Failed to copy'))
+    })
+  }
 
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Compress Files Online - ToolTonic</title>
-        <meta name="description" content="Free online file compression tool." />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <AdBanner position="top" />
-      <main className={styles.main}>
-        <div className={styles.leftAd}><AdBanner position="left" /></div>
-        <div className={styles.content}>
-          <h1 className={styles.title}>
-            <span className={styles.brand}>ToolTonic</span>
-            <span className={styles.tagline}>AI Powered File First Aid</span>
-          </h1>
-          <div
-            ref={dropZoneRef}
-            className={styles.dropZone}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current.click()}
-          >
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept="image/*"
-              className={styles.fileInput}
-            />
-            <div className={styles.dropContent}>
-              <svg className={styles.uploadIcon} viewBox="0 0 24 24">
-                <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
-              </svg>
-              <p>Drag & drop your image here or click to browse</p>
-              <p className={styles.supportedFormats}>Supported formats: JPG, PNG, GIF</p>
-            </div>
-          </div>
+    <div className="bg-white rounded-lg shadow-md p-6">
+      <Toaster position="top-right" />
 
-          {file && (
-            <div className={styles.fileInfo}>
-              <div className={styles.fileDetails}>
-                <span className={styles.fileName}>{file.name}</span>
-                <span className={styles.fileSize}>{(file.size / 1024).toFixed(2)} KB</span>
-              </div>
-              <button className={styles.clearButton} onClick={() => {
-                setFile(null);
-                setCompressedFile(null);
-              }}>Clear</button>
-            </div>
-          )}
-
-          {file && (
-            <>
-              <CompressionControls
-                settings={settings}
-                onSettingsChange={handleSettingsChange}
-                onCompress={handleCompress}
-                isProcessing={isProcessing}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Input Section */}
+        <div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="text" className="block text-sm font-medium text-gray-700 mb-1">
+                Text or URL to encode
+              </label>
+              <textarea
+                id="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                rows={3}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Enter text, URL, WiFi config, etc."
               />
+            </div>
 
-              {isProcessing && (
-                <div className={styles.progressContainer}>
-                  <div className={styles.progressBar} style={{ width: `${progress}%` }}></div>
-                  <span className={styles.progressText}>{progress}%</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-1">
+                  Size (px)
+                </label>
+                <input
+                  id="size"
+                  type="range"
+                  min="100"
+                  max="1000"
+                  value={size}
+                  onChange={(e) => setSize(parseInt(e.target.value))}
+                  className="w-full"
+                />
+                <div className="text-center mt-1">{size}px</div>
+              </div>
+
+              <div>
+                <label htmlFor="format" className="block text-sm font-medium text-gray-700 mb-1">
+                  Format
+                </label>
+                <select
+                  id="format"
+                  value={format}
+                  onChange={(e) => setFormat(e.target.value as 'png' | 'jpeg' | 'webp')}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="png">PNG</option>
+                  <option value="jpeg">JPEG</option>
+                  <option value="webp">WebP</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="fgColor" className="block text-sm font-medium text-gray-700 mb-1">
+                  Foreground Color
+                </label>
+                <div className="flex items-center">
+                  <input
+                    id="fgColor"
+                    type="color"
+                    value={fgColor}
+                    onChange={(e) => setFgColor(e.target.value)}
+                    className="w-8 h-8 mr-2"
+                  />
+                  <input
+                    type="text"
+                    value={fgColor}
+                    onChange={(e) => setFgColor(e.target.value)}
+                    className="flex-1 px-2 py-1 border border-gray-300 rounded-md"
+                  />
                 </div>
-              )}
+              </div>
 
-              {compressedFile && (
-                <div className={styles.resultsSection}>
-                  <FilePreview originalFile={file} compressedFile={compressedFile} settings={settings} />
-                  <div className={styles.actionButtons}>
-                    <button className={styles.downloadButton} onClick={handleDownload}>Download Compressed File</button>
-                    <SocialShare fileName={compressedFile.name} fileType={compressedFile.type} />
-                  </div>
-                  <div className={styles.compressionStats}>
-                    <div className={styles.statItem}>
-                      <span className={styles.statLabel}>Original Size:</span>
-                      <span className={styles.statValue}>{(file.size / 1024).toFixed(2)} KB</span>
-                    </div>
-                    <div className={styles.statItem}>
-                      <span className={styles.statLabel}>Compressed Size:</span>
-                      <span className={styles.statValue}>{(compressedFile.size / 1024).toFixed(2)} KB</span>
-                    </div>
-                    <div className={styles.statItem}>
-                      <span className={styles.statLabel}>Reduction:</span>
-                      <span className={styles.statValue}>{((1 - compressedFile.size / file.size) * 100).toFixed(2)}%</span>
-                    </div>
-                  </div>
+              <div>
+                <label htmlFor="bgColor" className="block text-sm font-medium text-gray-700 mb-1">
+                  Background Color
+                </label>
+                <div className="flex items-center">
+                  <input
+                    id="bgColor"
+                    type="color"
+                    value={bgColor}
+                    onChange={(e) => setBgColor(e.target.value)}
+                    className="w-8 h-8 mr-2"
+                  />
+                  <input
+                    type="text"
+                    value={bgColor}
+                    onChange={(e) => setBgColor(e.target.value)}
+                    className="flex-1 px-2 py-1 border border-gray-300 rounded-md"
+                  />
                 </div>
-              )}
-            </>
-          )}
+              </div>
+            </div>
 
-          <div className={styles.featuresSection}>
-            <h2>Why Use Our File Compressor?</h2>
-            <div className={styles.featuresGrid}>
-              <div className={styles.featureCard}><div className={styles.featureIcon}><FaBolt /></div><h3>Fast Processing</h3><p>Our AI-powered engine compresses files in seconds without quality loss.</p></div>
-              <div className={styles.featureCard}><div className={styles.featureIcon}><FaShieldAlt /></div><h3>Secure</h3><p>All processing happens in your browser. Your files never leave your device.</p></div>
-              <div className={styles.featureCard}><div className={styles.featureIcon}><FaSlidersH /></div><h3>Advanced Controls</h3><p>Adjust quality, dimensions, format and more to get perfect results.</p></div>
-              <div className={styles.featureCard}><div className={styles.featureIcon}><FaMobileAlt /></div><h3>Mobile Friendly</h3><p>Works perfectly on all devices from smartphones to desktop computers.</p></div>
+            <button
+              type="submit"
+              disabled={isGenerating}
+              className={`w-full py-2 px-4 rounded-md text-white font-medium ${isGenerating ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}`}
+            >
+              {isGenerating ? 'Generating...' : 'Generate QR Code'}
+            </button>
+          </form>
+
+          <div className="mt-6">
+            <h3 className="text-lg font-medium mb-2">Quick Presets</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              <button
+                onClick={() => {
+                  setSize(200)
+                  setFgColor('#000000')
+                  setBgColor('#ffffff')
+                  generateQR()
+                }}
+                className="py-1 px-2 text-sm border border-gray-300 rounded hover:bg-gray-100"
+              >
+                Default
+              </button>
+              <button
+                onClick={() => {
+                  setSize(300)
+                  setFgColor('#3b82f6')
+                  setBgColor('#ffffff')
+                  generateQR()
+                }}
+                className="py-1 px-2 text-sm border border-gray-300 rounded hover:bg-gray-100"
+              >
+                Blue
+              </button>
+              <button
+                onClick={() => {
+                  setSize(250)
+                  setFgColor('#000000')
+                  setBgColor('#f3f4f6')
+                  generateQR()
+                }}
+                className="py-1 px-2 text-sm border border-gray-300 rounded hover:bg-gray-100"
+              >
+                Light Gray BG
+              </button>
             </div>
           </div>
         </div>
-        <div className={styles.rightAd}><AdBanner position="right" /></div>
-      </main>
-      <AdBanner position="bottom" />
-      <footer className={styles.footer}>
-        <div className={styles.footerContent}>
-          <div className={styles.footerBrand}>
-            <span className={styles.brand}>ToolTonic</span>
-            <span className={styles.tagline}>AI Powered File First Aid</span>
+
+        {/* Output Section */}
+        <div className="flex flex-col items-center justify-center space-y-4">
+          <div className="border border-gray-200 p-4 rounded-lg">
+            <canvas
+              ref={canvasRef}
+              width={size}
+              height={size}
+              className="max-w-full h-auto"
+              style={{ display: qrImage ? 'block' : 'none' }}
+            />
+            {!qrImage && (
+              <div className="w-full h-64 flex items-center justify-center bg-gray-100 text-gray-500">
+                QR Code Preview
+              </div>
+            )}
           </div>
-          <div className={styles.footerLinks}>
-            <a href="/privacy">Privacy Policy</a>
-            <a href="/terms">Terms of Service</a>
-            <a href="/contact">Contact Us</a>
-          </div>
-          <div className={styles.copyright}>
-            © {new Date().getFullYear()} tooltonic.io. All rights reserved.
+
+          <div className="flex flex-wrap gap-2 justify-center">
+            <a
+              ref={downloadLinkRef}
+              className="py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700"
+              onClick={(e) => !qrImage && e.preventDefault()}
+            >
+              Download QR Code
+            </a>
+            <button
+              onClick={copyToClipboard}
+              disabled={!qrImage}
+              className="py-2 px-4 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50"
+            >
+              Copy to Clipboard
+            </button>
           </div>
         </div>
-      </footer>
+      </div>
+
+      <div className="mt-8 p-4 bg-gray-50 rounded-lg">
+        <h3 className="text-lg font-medium mb-2">How to use this QR Code Generator</h3>
+        <ol className="list-decimal pl-5 space-y-1 text-sm text-gray-600">
+          <li>Enter the text or URL you want to encode</li>
+          <li>Customize the size, colors, and format</li>
+          <li>Click &quot;Generate QR Code&quot;</li>
+          <li>Download or share your QR code</li>
+        </ol>
+      </div>
     </div>
-  );
+  )
 }
