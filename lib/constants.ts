@@ -41,14 +41,6 @@ export const toolsData: Tool[] = [
     color: "from-yellow-500 to-orange-600" 
   }, 
   { 
-    id: 5, 
-    title: "MP3 Cutter", 
-    description: "Cut and trim your audio files online without quality loss.", 
-    icon: "🎵", 
-    slug: "mp3-cutter", 
-    color: "from-red-500 to-pink-600" 
-  }, 
-  { 
     id: 6, 
     title: "Photo Collage", 
     description: "Combine multiple photos into beautiful collages with custom layouts.", 
@@ -63,13 +55,5 @@ export const toolsData: Tool[] = [
     icon: "📷", 
     slug: "scan-qr", 
     color: "from-teal-500 to-green-600" 
-  }, 
-  { 
-    id: 8, 
-    title: "Erase Background", 
-    description: "Remove backgrounds from images automatically with AI technology.", 
-    icon: "✂️", 
-    slug: "erase-background", 
-    color: "from-orange-500 to-red-600" 
-  } 
+  }
 ]; 

@@ -1,74 +1,66 @@
-// app/contact-us/page.tsx
-import { Metadata } from 'next';
-import Head from 'next/head';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'ToolTonic - AI File Tools Support | tooltonic.io',
-  description: 'Need help with ToolTonic? Contact us at tooltonicapp@gmail.com for inquiries, feedback, or support.',
-  keywords: ['ToolTonic support', 'contact file tools', 'PDF compressor contact', 'AI tools feedback'],
-  openGraph: {
-    title: 'ToolTonic - Get Help with AI File Tools',
-    description: 'Reach out at tooltonicapp@gmail.com for support with ToolTonic&#39;s file conversion, compression, and editing tools.',
-    url: 'https://tooltonic.io/Feedback',
-    type: 'website',
-    images: [
-      {
-        url: 'https://tooltonic.io/logo.png',
-        width: 1200,
-        height: 630,
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Contact ToolTonic - AI File Tools Support',
-    description: 'Email us at tooltonicapp@gmail.com for questions about ToolTonic&#39;s file tools.',
-    images: ['https://tooltonic.io/logo.png'],
-  },
+import React from 'react';
+
+const FeedbackPage = () => {
+  return (
+    <main className="max-w-4xl mx-auto px-4 py-10 text-gray-800 dark:text-gray-200">
+      <h1 className="text-3xl font-bold mb-4">Share Your Feedback – Help Us Improve ToolTonic.io!</h1>
+      <p className="text-sm text-gray-500 mb-8">We appreciate your time and suggestions 🙌</p>
+
+      <section className="space-y-6">
+        <p>
+          Thank you for using <strong>ToolTonic.io</strong> – your input is invaluable to us! We’re constantly working to
+          enhance your experience with our AI-powered file tools, and we’d love to hear your thoughts.
+        </p>
+
+        <h2 className="text-xl font-semibold">✅ User Experience (UX)</h2>
+        <ul className="list-disc ml-6 space-y-1">
+          <li>Is the website easy to navigate?</li>
+          <li>Are the tools (Image Resize, Compress Files, QR Code Generator, etc.) intuitive?</li>
+          <li>Any features you’d like added or improved?</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold">✅ Performance & Speed</h2>
+        <ul className="list-disc ml-6 space-y-1">
+          <li>How fast do the tools process files?</li>
+          <li>Did you encounter any lag or errors?</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold">✅ Design & Accessibility</h2>
+        <ul className="list-disc ml-6 space-y-1">
+          <li>Is the interface visually appealing and mobile-friendly?</li>
+          <li>Are the ads non-intrusive? (We follow Google AdSense guidelines.)</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold">✅ Feature Requests</h2>
+        <ul className="list-disc ml-6 space-y-1">
+          <li>What new tools would you find useful? (e.g., Video Compressor, PDF Merge)</li>
+          <li>Would you prefer batch processing for multiple files?</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold">✅ Bug Reports</h2>
+        <ul className="list-disc ml-6 space-y-1">
+          <li>Did you face any issues? Please describe them.</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold">📩 How to Share Feedback</h2>
+        <p>
+          Please email us at:{' '}
+          <a
+            href="mailto:tooltonicapp@gmail.com"
+            className="text-blue-600 dark:text-blue-400 underline"
+          >
+            tooltonicapp@gmail.com
+          </a>
+        </p>
+
+        <p className="mt-6">Your feedback helps us make ToolTonic.io faster, smarter, and more user-friendly. We appreciate your support!</p>
+
+        <p className="font-semibold mt-4">— The ToolTonic Team 🚀</p>
+      </section>
+    </main>
+  );
 };
 
-export default function Feedbackage() {
-  return (
-    <>
-      <Head>
-        <link rel="canonical" href="https://tooltonic.io/register" />
-      </Head>
-
-      {/* JSON-LD Schema.org */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "Organization",
-            "name": "ToolTonic",
-            "url": "https://tooltonic.io",
-            "logo": "https://tooltonic.io/logo.png",
-            "email": "tooltonicapp@gmail.com",
-            "description": "ToolTonic is an AI-powered file tools platform that helps you convert, compress, and manage files easily.",
-            "sameAs": [
-              "https://facebook.com/yourpage",
-              "https://twitter.com/yourhandle",
-              "https://instagram.com/yourprofile",
-              "https://linkedin.com/company/yourcompany",
-              "https://youtube.com/@yourchannel",
-              "https://github.com/yourrepo"
-            ],
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "email": "tooltonicapp@gmail.com",
-              "contactType": "Customer Support",
-              "availableLanguage": ["English", "Hindi"],
-              "areaServed": "IN"
-            }
-          }),
-        }}
-      />
-
-      <section className="container mx-auto px-4 py-12 animate-fade">
-        <h1 className="text-3xl font-bold text-center mb-6 text-primary">Feedback</h1>
-        
-      </section>
-    </>
-  );
-}
+export default FeedbackPage;

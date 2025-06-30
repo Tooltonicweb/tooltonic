@@ -3,16 +3,14 @@
 import { useState, useRef, useEffect } from 'react';
 import Head from 'next/head';
 import Script from 'next/script';
-import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-
-const QrScanner = dynamic(() => import('qr-scanner'), { ssr: false });
 
 export default function QRScannerPage() {
   const pathname = usePathname();
-  const videoRef = useRef(null);
-  const fileInputRef = useRef(null);
-  const [qrScanner, setQrScanner] = useState(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [qrScanner, setQrScanner] = useState<any>(null);
   const [scanResult, setScanResult] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [error, setError] = useState('');
@@ -23,6 +21,8 @@ export default function QRScannerPage() {
   const initScanner = async () => {
     try {
       if (!videoRef.current) return;
+
+      const { default: QrScanner } = await import('qr-scanner');
       const scanner = new QrScanner(
         videoRef.current,
         result => {
@@ -63,8 +63,8 @@ export default function QRScannerPage() {
     }
   };
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files?.[0] || event.dataTransfer?.files?.[0];
+  const handleFileUpload = async (event: any) => {
+    const file = event.target?.files?.[0] || event.dataTransfer?.files?.[0];
     if (!file) return;
 
     setError('');
@@ -74,8 +74,8 @@ export default function QRScannerPage() {
       const previewUrl = URL.createObjectURL(file);
       setFilePreview(previewUrl);
 
-      const qrScannerModule = await import('qr-scanner');
-      const result = await qrScannerModule.default.scanImage(file, {
+      const { default: QrScanner } = await import('qr-scanner');
+      const result = await QrScanner.scanImage(file, {
         returnDetailedScanResult: true,
       });
 
@@ -90,12 +90,12 @@ export default function QRScannerPage() {
     }
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     handleFileUpload(e);
@@ -130,7 +130,7 @@ export default function QRScannerPage() {
           mode: 'no-cors',
         });
         setAdBlockDetected(false);
-      } catch (e) {
+      } catch {
         setAdBlockDetected(true);
       }
     };
@@ -138,7 +138,7 @@ export default function QRScannerPage() {
   }, []);
 
   useEffect(() => {
-    let scanner;
+    let scanner: any;
     const loadScanner = async () => {
       scanner = await initScanner();
     };
@@ -147,9 +147,16 @@ export default function QRScannerPage() {
     return () => {
       scanner?.stop();
       scanner?.destroy();
-      if (filePreview) URL.revokeObjectURL(filePreview);
     };
   }, []);
+
+  useEffect(() => {
+    if (filePreview) {
+      return () => {
+        URL.revokeObjectURL(filePreview);
+      };
+    }
+  }, [filePreview]);
 
   useEffect(() => {
     if (darkMode) {
@@ -160,8 +167,9 @@ export default function QRScannerPage() {
   }, [darkMode]);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.adsbygoogle) {
+    if (typeof window !== 'undefined' && 'adsbygoogle' in window) {
       try {
+        // @ts-ignore
         (window.adsbygoogle = window.adsbygoogle || []).push({});
       } catch (e) {
         console.error('Adsense push failed:', e);
@@ -197,7 +205,14 @@ export default function QRScannerPage() {
         >
           {filePreview ? (
             <div className="relative">
-              <img src={filePreview} alt="QR preview" className="max-h-64 mx-auto mb-4 rounded" />
+              <Image
+                src={filePreview}
+                alt="QR preview"
+                width={400}
+                height={400}
+                className="mx-auto mb-4 rounded"
+                unoptimized
+              />
               <button
                 onClick={(e) => {
                   e.stopPropagation();

@@ -11,8 +11,8 @@ import { FaBolt, FaShieldAlt, FaSlidersH, FaMobileAlt } from 'react-icons/fa';
 import imageCompression from 'browser-image-compression';
 
 export default function CompressFiles() {
-  const [file, setFile] = useState(null);
-  const [compressedFile, setCompressedFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [compressedFile, setCompressedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [progress, setProgress] = useState(0);
   const [settings, setSettings] = useState({
@@ -25,22 +25,22 @@ export default function CompressFiles() {
     contrast: 100,
   });
 
-  const fileInputRef = useRef(null);
-  const dropZoneRef = useRef(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const dropZoneRef = useRef<HTMLDivElement | null>(null);
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     const droppedFile = e.dataTransfer.files[0];
     if (droppedFile) processFile(droppedFile);
   };
 
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
     if (selectedFile) processFile(selectedFile);
   };
 
-  const processFile = (file) => {
+  const processFile = (file: File) => {
     if (!file.type.match('image.*')) {
       alert('Please upload an image file (JPG, PNG, etc)');
       return;
@@ -103,12 +103,12 @@ export default function CompressFiles() {
     URL.revokeObjectURL(url);
   };
 
-  const handleSettingsChange = (newSettings) => {
+  const handleSettingsChange = (newSettings: any) => {
     setSettings((prev) => ({ ...prev, ...newSettings }));
   };
 
   useEffect(() => {
-    const preventDefaults = (e) => {
+    const preventDefaults = (e: Event) => {
       e.preventDefault();
       e.stopPropagation();
     };
@@ -146,7 +146,7 @@ export default function CompressFiles() {
             ref={dropZoneRef}
             className={styles.dropZone}
             onDrop={handleDrop}
-            onClick={() => fileInputRef.current.click()}
+            onClick={() => fileInputRef.current?.click()}
           >
             <input
               type="file"
@@ -195,10 +195,16 @@ export default function CompressFiles() {
 
               {compressedFile && (
                 <div className={styles.resultsSection}>
-                  <FilePreview originalFile={file} compressedFile={compressedFile} settings={settings} />
+                  <FilePreview
+                    originalFile={file}
+                    compressedFile={compressedFile}
+                    settings={settings}
+                  />
                   <div className={styles.actionButtons}>
-                    <button className={styles.downloadButton} onClick={handleDownload}>Download Compressed File</button>
-                    <SocialShare fileName={compressedFile.name} fileType={compressedFile.type} />
+                    <button className={styles.downloadButton} onClick={handleDownload}>
+                      Download Compressed File
+                    </button>
+                    <SocialShare fileName={compressedFile.name} />
                   </div>
                   <div className={styles.compressionStats}>
                     <div className={styles.statItem}>
@@ -211,7 +217,9 @@ export default function CompressFiles() {
                     </div>
                     <div className={styles.statItem}>
                       <span className={styles.statLabel}>Reduction:</span>
-                      <span className={styles.statValue}>{((1 - compressedFile.size / file.size) * 100).toFixed(2)}%</span>
+                      <span className={styles.statValue}>
+                        {((1 - compressedFile.size / file.size) * 100).toFixed(2)}%
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -229,6 +237,17 @@ export default function CompressFiles() {
             </div>
           </div>
         </div>
+        <div className={styles.userManual}>
+  <a
+    href="/manuals/file-compress.pdf"
+    target="_blank"
+    rel="noopener noreferrer"
+    className={styles.manualLink}
+  >
+    📄 Download User Manual (PDF)
+  </a>
+</div>
+
         <div className={styles.rightAd}><AdBanner position="right" /></div>
       </main>
       <AdBanner position="bottom" />

@@ -2,16 +2,15 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation'; // ✅ Correct for App Router
+import { usePathname } from 'next/navigation';
 import './Header.css';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
-  const pathname = usePathname(); // ✅ Track route changes
+  const pathname = usePathname();
 
-  // Header scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -20,7 +19,6 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Set dark mode based on user system preference
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -28,16 +26,14 @@ const Header = () => {
     }
   }, []);
 
-  // Toggle dark mode manually
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.documentElement.classList.toggle('dark', !darkMode);
   };
 
-  // Close mobile menu on route change
   useEffect(() => {
     setIsMenuOpen(false);
-  }, [pathname]); // ✅ Run effect when path changes
+  }, [pathname]);
 
   return (
     <header className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 shadow-sm' : 'bg-white dark:bg-gray-900'} ${darkMode ? 'dark' : ''}`}>
@@ -66,9 +62,6 @@ const Header = () => {
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center space-x-6">
             <Link href="/tools" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">All Tools</Link>
-            <Link href="/features" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">Features</Link>
-            <Link href="/blog" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">Blog</Link>
-            <Link href="/pricing" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">Pricing</Link>
           </nav>
 
           {/* Right controls */}
@@ -86,10 +79,7 @@ const Header = () => {
               )}
             </button>
 
-            <Link href="/login" className="hidden md:inline-block px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Sign In</Link>
-            <Link href="/register" className="hidden md:inline-block px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity shadow-md">Get Started</Link>
-
-            {/* Mobile toggle */}
+            {/* Mobile menu toggle */}
             <button className="md:hidden p-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
               {isMenuOpen ? (
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -104,18 +94,11 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile menu */}
+        {/* Mobile nav */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4">
             <nav className="flex flex-col space-y-3">
               <Link href="/tools" className="px-3 py-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">All Tools</Link>
-              <Link href="/features" className="px-3 py-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Features</Link>
-              <Link href="/blog" className="px-3 py-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Blog</Link>
-              <Link href="/pricing" className="px-3 py-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Pricing</Link>
-              <div className="border-t border-gray-200 dark:border-gray-700 pt-3 mt-2">
-                <Link href="/login" className="block px-3 py-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium">Sign In</Link>
-                <Link href="/register" className="block mt-2 px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md text-center font-medium hover:opacity-90">Get Started</Link>
-              </div>
             </nav>
           </div>
         )}

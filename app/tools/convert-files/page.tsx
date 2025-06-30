@@ -11,10 +11,10 @@ import AdBanner from '../../../components/FileConverter/AdBanner';
 import styles from '../../../styles/Home.module.css';
 
 export default function Home() {
-  const [file, setFile] = useState(null);
-  const [convertedFile, setConvertedFile] = useState(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [convertedFile, setConvertedFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const [options, setOptions] = useState({
     format: 'original',
@@ -27,9 +27,9 @@ export default function Home() {
     purpose: 'web',
   });
 
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const handleFileChange = (selectedFile) => {
+  const handleFileChange = (selectedFile: File) => {
     if (!selectedFile) return;
 
     const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
@@ -50,70 +50,80 @@ export default function Home() {
 
     try {
       const reader = new FileReader();
+
       reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          if (options.format === 'pdf') {
-            const doc = new jsPDF({
-              orientation: img.width > img.height ? 'landscape' : 'portrait',
-              unit: 'px',
-              format: [img.width, img.height],
-            });
+        const result = e.target?.result;
+        if (typeof result === 'string') {
+          const img = new Image();
 
-            doc.addImage(img, 'PNG', 0, 0, img.width, img.height);
-            const pdfBlob = doc.output('blob');
+          img.onload = () => {
+            if (options.format === 'pdf') {
+              const doc = new jsPDF({
+                orientation: img.width > img.height ? 'landscape' : 'portrait',
+                unit: 'px',
+                format: [img.width, img.height],
+              });
 
-            const converted = new File(
-              [pdfBlob],
-              `converted_${file.name.split('.')[0]}.pdf`,
-              { type: 'application/pdf' }
-            );
+              doc.addImage(img, 'PNG', 0, 0, img.width, img.height);
+              const pdfBlob = doc.output('blob');
 
-            setConvertedFile(converted);
-            setIsProcessing(false);
-          } else {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
+              const converted = new File(
+                [pdfBlob],
+                `converted_${file.name.split('.')[0]}.pdf`,
+                { type: 'application/pdf' }
+              );
 
-            const width = options.width || img.width;
-            const height = options.height || img.height;
+              setConvertedFile(converted);
+              setIsProcessing(false);
+            } else {
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              if (!ctx) return;
 
-            canvas.width = width;
-            canvas.height = height;
+              const width = options.width || img.width;
+              const height = options.height || img.height;
 
-            ctx.filter = `brightness(${options.brightness}%) contrast(${options.contrast}%)`;
-            ctx.drawImage(img, 0, 0, width, height);
+              canvas.width = width;
+              canvas.height = height;
 
-            canvas.toBlob(
-              (blob) => {
-                if (blob) {
-                  const ext =
-                    options.format === 'original'
-                      ? file.type.split('/')[1]
-                      : options.format;
-                  const converted = new File(
-                    [blob],
-                    `converted_${file.name.split('.')[0]}.${ext}`,
-                    { type: `image/${ext}` }
-                  );
-                  setConvertedFile(converted);
-                } else {
-                  setError('Conversion failed.');
-                }
-                setIsProcessing(false);
-              },
-              `image/${
-                options.format === 'original'
-                  ? file.type.split('/')[1]
-                  : options.format
-              }`,
-              options.quality / 100
-            );
-          }
-        };
-        img.src = e.target.result;
+              ctx.filter = `brightness(${options.brightness}%) contrast(${options.contrast}%)`;
+              ctx.drawImage(img, 0, 0, width, height);
+
+              canvas.toBlob(
+                (blob) => {
+                  if (blob) {
+                    const ext =
+                      options.format === 'original'
+                        ? file.type.split('/')[1]
+                        : options.format;
+                    const converted = new File(
+                      [blob],
+                      `converted_${file.name.split('.')[0]}.${ext}`,
+                      { type: `image/${ext}` }
+                    );
+                    setConvertedFile(converted);
+                  } else {
+                    setError('Conversion failed.');
+                  }
+                  setIsProcessing(false);
+                },
+                `image/${
+                  options.format === 'original'
+                    ? file.type.split('/')[1]
+                    : options.format
+                }`,
+                options.quality / 100
+              );
+            }
+          };
+
+          img.src = result;
+        } else {
+          setError('Failed to read file.');
+          setIsProcessing(false);
+        }
       };
+
       reader.readAsDataURL(file);
     } catch (err) {
       setError('Conversion failed. Please try again.');
@@ -134,7 +144,7 @@ export default function Home() {
     URL.revokeObjectURL(url);
   };
 
-  const handleOptionChange = (newOptions) => {
+  const handleOptionChange = (newOptions: any) => {
     setOptions((prev) => ({ ...prev, ...newOptions }));
   };
 

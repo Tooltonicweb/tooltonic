@@ -1,46 +1,52 @@
-import React, { useCallback, useState } from 'react'
+'use client';
 
-const FileUpload = ({ onFileUpload }) => {
-  const [isDragging, setIsDragging] = useState(false)
-  const fileInputRef = React.createRef()
+import React, { useCallback, useState, useRef } from 'react';
 
-  const handleDragEnter = useCallback((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(true)
-  }, [])
+interface FileUploadProps {
+  onFileUpload: (file: File) => void;
+}
 
-  const handleDragLeave = useCallback((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-  }, [])
+const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null); // ✅ Proper typing
 
-  const handleDragOver = useCallback((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }, [])
+  const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
 
-  const handleDrop = useCallback((e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setIsDragging(false)
-    const files = e.dataTransfer.files
-    if (files.length) {
-      onFileUpload(files[0])
+  const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
+
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      onFileUpload(files[0]);
     }
-  }, [onFileUpload])
+  }, [onFileUpload]);
 
-  const handleFileSelect = (e) => {
-    const files = e.target.files
-    if (files.length) {
-      onFileUpload(files[0])
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      onFileUpload(files[0]);
     }
-  }
+  };
 
   const triggerFileSelect = () => {
-    fileInputRef.current.click()
-  }
+    fileInputRef.current?.click(); // ✅ Safe with optional chaining
+  };
 
   return (
     <div
@@ -65,7 +71,7 @@ const FileUpload = ({ onFileUpload }) => {
         <p className="supported-formats">Supported formats: MP3, WAV, OGG, AAC</p>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FileUpload
+export default FileUpload;

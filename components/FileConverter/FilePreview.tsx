@@ -1,23 +1,25 @@
 'use client';
+
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 const FilePreview = ({ file, convertedFile, options }) => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
+    let url: string | null = null;
+
     if (convertedFile) {
-      const url = URL.createObjectURL(convertedFile);
+      url = URL.createObjectURL(convertedFile);
       setPreviewUrl(url);
-      return () => URL.revokeObjectURL(url);
+    } else if (file) {
+      url = URL.createObjectURL(file);
+      setPreviewUrl(url);
     }
 
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setPreviewUrl(url);
-      return () => URL.revokeObjectURL(url);
-    }
-
-    setPreviewUrl(null);
+    return () => {
+      if (url) URL.revokeObjectURL(url);
+    };
   }, [file, convertedFile]);
 
   if (!previewUrl) return null;
@@ -40,16 +42,24 @@ const FilePreview = ({ file, convertedFile, options }) => {
           <p>📄 PDF file ready. Click download to view.</p>
         </div>
       ) : (
-        <img
-          src={previewUrl}
-          alt="Preview"
+        <div
           style={{
-            maxWidth: '100%',
-            maxHeight: '300px',
+            position: 'relative',
+            width: '100%',
+            maxWidth: '500px',
+            height: '300px',
             border: '1px solid #ccc',
             marginTop: '10px',
           }}
-        />
+        >
+          <Image
+            src={previewUrl}
+            alt="Preview"
+            fill
+            style={{ objectFit: 'contain' }}
+            unoptimized // Important for blob/object URLs
+          />
+        </div>
       )}
     </div>
   );
