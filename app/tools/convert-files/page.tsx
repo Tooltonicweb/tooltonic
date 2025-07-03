@@ -161,11 +161,20 @@ export default function Home() {
       </Head>
 
       <div className={styles.container}>
-        <h1 className={styles.title}>ToolTonic</h1>
-        <p className={styles.tagline}>AI Powered File First Aid</p>
+        <h1 className={styles.title}>Convert Tools</h1>
+        
 
         <AdBanner position="top" />
-
+<div className={styles.userManual}>
+  <a
+    href="/manuals/User Manual for Convert File.pdf"
+    target="_blank"
+    rel="noopener noreferrer"
+    className={styles.manualLink}
+  >
+    📄 Download User Manual (PDF)
+  </a>
+</div>
         <div className={styles.content}>
           <AdBanner position="left" />
 

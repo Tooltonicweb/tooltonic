@@ -1,19 +1,43 @@
 import styles from '../../styles/SettingsPanel.module.css';
 
+type SettingsType = {
+  layout: string;
+  rows: number;
+  columns: number;
+  spacing: number;
+  borderRadius: number;
+  backgroundColor: string;
+  outputFormat: string;
+  quality: number;
+};
+
+type SettingsPanelProps = {
+  settings: SettingsType;
+  onSettingsChange: (updated: SettingsType) => void;
+  selectedCount: number;
+  totalCount: number;
+  onGenerate: () => void;
+  isProcessing: boolean;
+};
+
 export default function SettingsPanel({
   settings,
   onSettingsChange,
   selectedCount,
   totalCount,
   onGenerate,
-  isProcessing
-}) {
-  const handleChange = (e) => {
+  isProcessing,
+}: SettingsPanelProps) {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
-    const newValue = type === 'number' ? parseInt(value) : value;
+    const newValue =
+      type === 'number' || name === 'rows' || name === 'columns'
+        ? parseInt(value)
+        : value;
+
     onSettingsChange({
       ...settings,
-      [name]: newValue
+      [name]: newValue,
     });
   };
 
@@ -21,6 +45,7 @@ export default function SettingsPanel({
     <div className={styles.settingsPanel}>
       <h3 className={styles.settingsTitle}>Collage Settings</h3>
 
+      {/* Layout Selection */}
       <div className={styles.settingGroup}>
         <label className={styles.settingLabel}>Layout</label>
         <select
@@ -36,6 +61,7 @@ export default function SettingsPanel({
         </select>
       </div>
 
+      {/* Grid Layout Specific */}
       {settings.layout === 'grid' && (
         <>
           <div className={styles.settingGroup}>
@@ -66,6 +92,7 @@ export default function SettingsPanel({
         </>
       )}
 
+      {/* Spacing */}
       <div className={styles.settingGroup}>
         <label className={styles.settingLabel}>Spacing (px)</label>
         <input
@@ -80,6 +107,7 @@ export default function SettingsPanel({
         <span className={styles.rangeValue}>{settings.spacing}px</span>
       </div>
 
+      {/* Corner Radius */}
       <div className={styles.settingGroup}>
         <label className={styles.settingLabel}>Corner Radius (px)</label>
         <input
@@ -94,6 +122,7 @@ export default function SettingsPanel({
         <span className={styles.rangeValue}>{settings.borderRadius}px</span>
       </div>
 
+      {/* Background Color */}
       <div className={styles.settingGroup}>
         <label className={styles.settingLabel}>Background Color</label>
         <div className={styles.colorInputContainer}>
@@ -108,6 +137,7 @@ export default function SettingsPanel({
         </div>
       </div>
 
+      {/* Output Format */}
       <div className={styles.settingGroup}>
         <label className={styles.settingLabel}>Output Format</label>
         <select
@@ -122,6 +152,7 @@ export default function SettingsPanel({
         </select>
       </div>
 
+      {/* Quality for JPEG or WebP */}
       {(settings.outputFormat === 'jpeg' || settings.outputFormat === 'webp') && (
         <div className={styles.settingGroup}>
           <label className={styles.settingLabel}>Quality ({settings.quality}%)</label>
@@ -137,10 +168,12 @@ export default function SettingsPanel({
         </div>
       )}
 
+      {/* Image Count */}
       <div className={styles.imageCount}>
         Selected: {selectedCount} of {totalCount} images
       </div>
 
+      {/* Generate Button */}
       <button
         onClick={onGenerate}
         disabled={selectedCount === 0 || isProcessing}

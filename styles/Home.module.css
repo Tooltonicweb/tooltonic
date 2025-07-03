@@ -162,6 +162,7 @@ transition: background-color 0.2s;
 
 .browseButton:hover {
 background-color: var(--primary-hover);
+  color: #000
 }
 
 .fileInput {
@@ -437,7 +438,7 @@ align-items: center;
 justify-content: center;
 background-color: rgba(0, 0, 0, 0.05);
 border-radius: var(--radius-sm);
-color: var(--text-light);
+color: #000;
 font-size: 0.875rem;
 }
 
@@ -774,3 +775,4 @@ flex-direction: column;
 grid-template-columns: 1fr;
 }
 }
+

@@ -1,8 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from '../../styles/PreviewPanel.module.css';
+
+type PreviewPanelProps = {
+  files: File[];
+  selectedImages: File[];
+  onImageSelect: (file: File, isSelected: boolean) => void;
+  previewUrl: string | null;
+  settings: {
+    borderRadius: number;
+    backgroundColor: string;
+    spacing: number;
+  };
+};
 
 export default function PreviewPanel({
   files,
@@ -10,8 +22,19 @@ export default function PreviewPanel({
   onImageSelect,
   previewUrl,
   settings,
-}) {
-  const [viewMode, setViewMode] = useState('grid');
+}: PreviewPanelProps) {
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+
+  // Clean up object URLs on unmount or file change
+  useEffect(() => {
+    const urls = files.map(file => URL.createObjectURL(file));
+    setImageUrls(urls);
+
+    return () => {
+      urls.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [files]);
 
   return (
     <div className={styles.previewPanel}>
@@ -37,7 +60,7 @@ export default function PreviewPanel({
         <div className={styles.imageGrid}>
           {files.map((file, index) => {
             const isSelected = selectedImages.includes(file);
-            const url = URL.createObjectURL(file);
+            const url = imageUrls[index];
 
             return (
               <div
@@ -45,13 +68,10 @@ export default function PreviewPanel({
                 className={`${styles.imageItem} ${isSelected ? styles.selected : ''}`}
                 onClick={() => onImageSelect(file, !isSelected)}
               >
-                <Image
+                <img
                   src={url}
                   alt={`Preview ${index + 1}`}
-                  width={150}
-                  height={150}
                   className={styles.imageThumbnail}
-                  unoptimized
                 />
                 {isSelected && (
                   <div className={styles.selectedBadge}>
@@ -72,7 +92,7 @@ export default function PreviewPanel({
         <div className={styles.imageList}>
           {files.map((file, index) => {
             const isSelected = selectedImages.includes(file);
-            const url = URL.createObjectURL(file);
+            const url = imageUrls[index];
 
             return (
               <div
@@ -93,13 +113,10 @@ export default function PreviewPanel({
                     <div className={styles.emptyCheckbox} />
                   )}
                 </div>
-                <Image
+                <img
                   src={url}
                   alt={`Preview ${index + 1}`}
-                  width={80}
-                  height={80}
                   className={styles.listThumbnail}
-                  unoptimized
                 />
                 <div className={styles.listInfo}>
                   <div className={styles.listName}>{file.name}</div>
@@ -115,18 +132,15 @@ export default function PreviewPanel({
         <div className={styles.collagePreview}>
           <h3 className={styles.previewTitle}>Collage Preview</h3>
           <div className={styles.previewContainer}>
-            <Image
+            <img
               src={previewUrl}
               alt="Generated collage preview"
-              width={600}
-              height={400}
               className={styles.collageImage}
               style={{
                 borderRadius: `${settings.borderRadius}px`,
                 backgroundColor: settings.backgroundColor,
                 padding: `${settings.spacing}px`,
               }}
-              unoptimized
             />
           </div>
         </div>

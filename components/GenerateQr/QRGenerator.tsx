@@ -141,12 +141,7 @@ export default function QRGenerator() {
                     onChange={(e) => setFgColor(e.target.value)}
                     className="w-8 h-8 mr-2"
                   />
-                  <input
-                    type="text"
-                    value={fgColor}
-                    onChange={(e) => setFgColor(e.target.value)}
-                    className="flex-1 px-2 py-1 border border-gray-300 rounded-md"
-                  />
+                  
                 </div>
               </div>
 
@@ -162,12 +157,7 @@ export default function QRGenerator() {
                     onChange={(e) => setBgColor(e.target.value)}
                     className="w-8 h-8 mr-2"
                   />
-                  <input
-                    type="text"
-                    value={bgColor}
-                    onChange={(e) => setBgColor(e.target.value)}
-                    className="flex-1 px-2 py-1 border border-gray-300 rounded-md"
-                  />
+                 
                 </div>
               </div>
             </div>

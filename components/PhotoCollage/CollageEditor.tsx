@@ -1,33 +1,60 @@
-import { useState, useEffect, useRef } from 'react';
+'use client';
+
+import { useEffect, useRef } from 'react';
 import PreviewPanel from './PreviewPanel';
 import SettingsPanel from './SettingsPanel';
 import SocialShare from './SocialShare';
 import styles from '../../styles/CollageEditor.module.css';
 
+type SettingsType = {
+  layout: string;
+  rows: number;
+  columns: number;
+  spacing: number;
+  borderRadius: number;
+  backgroundColor: string;
+  outputFormat: string;
+  quality: number;
+};
+
+type CollageEditorProps = {
+  files: File[];
+  selectedFiles: File[];
+  setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
+  settings: SettingsType;
+  onSettingsChange: (settings: SettingsType) => void;
+  onGenerate: () => void;
+  isProcessing: boolean;
+  collage: string | null;
+};
+
 export default function CollageEditor({
   files,
+  selectedFiles,
+  setSelectedFiles,
   settings,
   onSettingsChange,
   onGenerate,
   isProcessing,
-  collage
-}) {
-  const [selectedImages, setSelectedImages] = useState([]);
-  const canvasRef = useRef(null);
+  collage,
+}: CollageEditorProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  // Automatically select all files when they change
   useEffect(() => {
-    // Initialize with all images selected
-    setSelectedImages(files.map(file => file));
-  }, [files]);
+    setSelectedFiles(files);
+  }, [files, setSelectedFiles]);
 
-  const handleImageSelect = (file, isSelected) => {
+  // Select/deselect single image
+  const handleImageSelect = (file: File, isSelected: boolean) => {
     if (isSelected) {
-      setSelectedImages(prev => [...prev, file]);
+      setSelectedFiles(prev => [...prev, file]);
     } else {
-      setSelectedImages(prev => prev.filter(f => f !== file));
+      setSelectedFiles(prev => prev.filter(f => f !== file));
     }
   };
 
+  // Download collage
   const handleDownload = () => {
     if (!collage) return;
     const link = document.createElement('a');
@@ -45,7 +72,7 @@ export default function CollageEditor({
           <SettingsPanel
             settings={settings}
             onSettingsChange={onSettingsChange}
-            selectedCount={selectedImages.length}
+            selectedCount={selectedFiles.length}
             totalCount={files.length}
             onGenerate={onGenerate}
             isProcessing={isProcessing}
@@ -55,7 +82,7 @@ export default function CollageEditor({
         <div className={styles.previewColumn}>
           <PreviewPanel
             files={files}
-            selectedImages={selectedImages}
+            selectedImages={selectedFiles}
             onImageSelect={handleImageSelect}
             previewUrl={collage}
             settings={settings}

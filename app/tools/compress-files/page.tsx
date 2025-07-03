@@ -239,7 +239,7 @@ export default function CompressFiles() {
         </div>
         <div className={styles.userManual}>
   <a
-    href="/manuals/file-compress.pdf"
+    href="/manuals/User Manual for Compress Files.pdf"
     target="_blank"
     rel="noopener noreferrer"
     className={styles.manualLink}

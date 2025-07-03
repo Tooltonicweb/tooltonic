@@ -42,6 +42,10 @@ const FileDropzone: React.FC<Props> = ({ onFileChange }) => {
             accept="image/*,application/pdf"
           />
         </label>
+        {/* ✅ Supported formats info */}
+    <p className={`${styles.supportedFormatsText} text-sm text-gray-500 mt-2`}>
+      Supported formats: <span className="font-medium">JPEG, PNG, WEBP, GIF, PDF</span>
+    </p>
       </div>
     </div>
   );

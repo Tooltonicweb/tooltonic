@@ -10,10 +10,12 @@ import AdBanner from '../../../components/PhotoCollage/AdBanner';
 import styles from '../../../styles/Home.module.css';
 import generateCollage from '../../../components/PhotoCollage/generateCollage';
 
-export default function Home() {
+export default function PhotoCollagePage() {
   const [files, setFiles] = useState<File[]>([]);
-  const [collageUrl, setCollageUrl] = useState<string | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [collage, setCollage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+
   const [settings, setSettings] = useState({
     layout: 'grid',
     rows: 2,
@@ -27,14 +29,26 @@ export default function Home() {
 
   const handleFilesUpload = (uploadedFiles: File[]) => {
     setFiles(uploadedFiles);
+    setSelectedFiles(uploadedFiles); // auto-select all
+    setCollage(null); // reset previous collage
   };
 
   const handleGenerateCollage = async () => {
+    if (selectedFiles.length === 0) return;
+
     setIsProcessing(true);
-    const collageBlob = await generateCollage(files, settings);
-    if (collageBlob && collageBlob instanceof Blob) {
-      setCollageUrl(URL.createObjectURL(collageBlob));
+
+    // Type assertion added to fix outputFormat type issue
+    const blob = await generateCollage(selectedFiles, {
+      ...settings,
+      outputFormat: settings.outputFormat as 'jpeg' | 'png' | 'webp',
+    });
+
+    if (blob instanceof Blob) {
+      const url = URL.createObjectURL(blob);
+      setCollage(url);
     }
+
     setIsProcessing(false);
   };
 
@@ -53,7 +67,7 @@ export default function Home() {
         <meta property="og:title" content="Free Photo Collage Maker | ToolTonic" />
         <meta
           property="og:description"
-          content="Create beautiful photo collages online for free with ToolTonic&apos;s AI-powered collage maker."
+          content="Create beautiful photo collages online for free with ToolTonic's AI-powered collage maker."
         />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://tooltonic.io/photo-collage" />
@@ -63,6 +77,7 @@ export default function Home() {
       </Head>
 
       <AdBanner position="top" />
+      
 
       <main className={styles.main}>
         <h1 className={styles.title}>AI-Powered Photo Collage Maker</h1>
@@ -77,11 +92,13 @@ export default function Home() {
             <div className={styles.editorSection}>
               <CollageEditor
                 files={files}
+                selectedFiles={selectedFiles}
+                setSelectedFiles={setSelectedFiles}
                 settings={settings}
                 onSettingsChange={setSettings}
                 onGenerate={handleGenerateCollage}
                 isProcessing={isProcessing}
-                collage={collageUrl}
+                collage={collage}
               />
             </div>
           )}
@@ -108,9 +125,21 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        <div className={styles.userManual}>
+          <a
+            href="/manuals/User Manual for Photo Collage Tool.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.manualLink}
+          >
+            📄 Download User Manual (PDF)
+          </a>
+        </div>
       </main>
 
       <AdBanner position="bottom" />
+    
     </div>
   );
 }

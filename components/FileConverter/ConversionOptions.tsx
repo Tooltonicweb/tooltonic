@@ -1,5 +1,6 @@
-// File: components/FileConverter/ConversionOptions.tsx
-import { useState } from 'react';
+'use client';
+
+import { useState, useEffect } from 'react';
 import styles from '../../styles/Home.module.css';
 
 type ConversionOptionsProps = {
@@ -22,6 +23,15 @@ type ConversionOptionsProps = {
   convertedFile: File | null;
 };
 
+const presets = [
+  { id: 'instagram', label: 'Instagram Post', width: 1080, height: 1080 },
+  { id: 'facebook', label: 'Facebook Post', width: 1200, height: 630 },
+  { id: 'twitter', label: 'Twitter Post', width: 1024, height: 512 },
+  { id: 'linkedin', label: 'LinkedIn Post', width: 1200, height: 627 },
+  { id: 'a4', label: 'A4 Document', width: 2480, height: 3508 },
+  { id: 'custom', label: 'Custom', width: null, height: null },
+];
+
 const ConversionOptions: React.FC<ConversionOptionsProps> = ({
   file,
   options,
@@ -33,6 +43,54 @@ const ConversionOptions: React.FC<ConversionOptionsProps> = ({
   convertedFile,
 }) => {
   const [preset, setPreset] = useState('custom');
+
+  // Auto-switch to "custom" if dimensions are manually changed
+  useEffect(() => {
+    if (preset !== 'custom' && (options.width === null || options.height === null)) {
+      setPreset('custom');
+    }
+  }, [options.width, options.height]);
+
+  // Auto set width/height based on original image dimensions
+  useEffect(() => {
+    if (file && (!options.width || !options.height)) {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+
+      img.onload = () => {
+        onOptionChange({
+          width: img.width,
+          height: img.height,
+        });
+        URL.revokeObjectURL(img.src);
+      };
+    }
+  }, [file]);
+
+  const handlePresetChange = (presetId: string) => {
+    const selected = presets.find((p) => p.id === presetId);
+    if (!selected) return;
+
+    setPreset(presetId);
+
+    onOptionChange({
+      width: selected.width,
+      height: selected.height,
+      maintainAspect: false,
+    });
+  };
+
+  const handleDimensionChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    key: 'width' | 'height'
+  ) => {
+    const value = e.target.value ? parseInt(e.target.value) : null;
+    onOptionChange({ [key]: value });
+
+    if (preset !== 'custom') {
+      setPreset('custom'); // user manually changed size
+    }
+  };
 
   const formatOptions = [
     { value: 'original', label: 'Keep original' },
@@ -49,35 +107,6 @@ const ConversionOptions: React.FC<ConversionOptionsProps> = ({
     { value: 'document', label: 'Document' },
   ];
 
-  const presets = [
-    { id: 'instagram', label: 'Instagram Post', width: 1080, height: 1080 },
-    { id: 'facebook', label: 'Facebook Post', width: 1200, height: 630 },
-    { id: 'twitter', label: 'Twitter Post', width: 1024, height: 512 },
-    { id: 'linkedin', label: 'LinkedIn Post', width: 1200, height: 627 },
-    { id: 'a4', label: 'A4 Document', width: 2480, height: 3508 },
-    { id: 'custom', label: 'Custom', width: null, height: null },
-  ];
-
-  const handlePresetChange = (presetId: string) => {
-    const selected = presets.find((p) => p.id === presetId);
-    if (!selected) return;
-
-    setPreset(presetId);
-
-    if (presetId !== 'custom') {
-      onOptionChange({
-        width: selected.width,
-        height: selected.height,
-        maintainAspect: false,
-      });
-    }
-  };
-
-  const handleDimensionChange = (e: React.ChangeEvent<HTMLInputElement>, key: 'width' | 'height') => {
-    const value = e.target.value ? parseInt(e.target.value) : null;
-    onOptionChange({ [key]: value });
-  };
-
   return (
     <div className={styles.optionsContainer}>
       <h3>Conversion Options</h3>
@@ -89,7 +118,9 @@ const ConversionOptions: React.FC<ConversionOptionsProps> = ({
           {presets.map((presetOption) => (
             <button
               key={presetOption.id}
-              className={`${styles.presetButton} ${preset === presetOption.id ? styles.activePreset : ''}`}
+              className={`${styles.presetButton} ${
+                preset === presetOption.id ? styles.activePreset : ''
+              }`}
               onClick={() => handlePresetChange(presetOption.id)}
               type="button"
             >
@@ -130,7 +161,9 @@ const ConversionOptions: React.FC<ConversionOptionsProps> = ({
           <input
             type="checkbox"
             checked={options.maintainAspect}
-            onChange={() => onOptionChange({ maintainAspect: !options.maintainAspect })}
+            onChange={() =>
+              onOptionChange({ maintainAspect: !options.maintainAspect })
+            }
           />
           Maintain aspect ratio
         </label>
@@ -160,8 +193,10 @@ const ConversionOptions: React.FC<ConversionOptionsProps> = ({
           min="1"
           max="100"
           value={options.quality}
-          onChange={(e) => onOptionChange({ quality: parseInt(e.target.value) })}
-          className={styles.slider}
+          onChange={(e) =>
+            onOptionChange({ quality: parseInt(e.target.value) })
+          }
+          className="w-full"
         />
       </div>
 
@@ -173,8 +208,10 @@ const ConversionOptions: React.FC<ConversionOptionsProps> = ({
           min="0"
           max="200"
           value={options.brightness}
-          onChange={(e) => onOptionChange({ brightness: parseInt(e.target.value) })}
-          className={styles.slider}
+          onChange={(e) =>
+            onOptionChange({ brightness: parseInt(e.target.value) })
+          }
+          className="w-full"
         />
       </div>
 
@@ -186,8 +223,10 @@ const ConversionOptions: React.FC<ConversionOptionsProps> = ({
           min="0"
           max="200"
           value={options.contrast}
-          onChange={(e) => onOptionChange({ contrast: parseInt(e.target.value) })}
-          className={styles.slider}
+          onChange={(e) =>
+            onOptionChange({ contrast: parseInt(e.target.value) })
+          }
+          className="w-full"
         />
       </div>
 

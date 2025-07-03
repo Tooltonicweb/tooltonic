@@ -9,31 +9,43 @@ export default async function generateCollage(files, settings) {
     borderRadius,
     backgroundColor,
     outputFormat,
-    quality
+    quality,
   } = settings;
 
-  // Limit max images to fit in the grid
   const maxImages = rows * columns;
   const imagesToUse = files.slice(0, maxImages);
 
-  // Load image elements
+  // Load images safely with error handling and URL cleanup
   const imageElements = await Promise.all(
     imagesToUse.map(file => {
       return new Promise((resolve, reject) => {
         const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = URL.createObjectURL(file);
+        const objectUrl = URL.createObjectURL(file);
+
+        img.onload = () => {
+          URL.revokeObjectURL(objectUrl); // cleanup
+          resolve(img);
+        };
+        img.onerror = (e) => {
+          console.error("Image failed to load", e);
+          URL.revokeObjectURL(objectUrl);
+          reject(e);
+        };
+
+        img.src = objectUrl;
       });
     })
   );
 
-  // Define cell size (for simplicity, fix width/height)
+  // Cell dimensions
   const cellWidth = 200;
   const cellHeight = 200;
 
-  const canvasWidth = columns * cellWidth + (columns - 1) * spacing;
-  const canvasHeight = rows * cellHeight + (rows - 1) * spacing;
+  const safeSpacing = Math.max(spacing, 0);
+  const safeRadius = Math.max(borderRadius, 0);
+
+  const canvasWidth = columns * cellWidth + (columns - 1) * safeSpacing;
+  const canvasHeight = rows * cellHeight + (rows - 1) * safeSpacing;
 
   const canvas = document.createElement('canvas');
   canvas.width = canvasWidth;
@@ -42,44 +54,44 @@ export default async function generateCollage(files, settings) {
   const ctx = canvas.getContext('2d');
 
   // Fill background
-  ctx.fillStyle = backgroundColor;
+  ctx.fillStyle = backgroundColor || '#ffffff';
   ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  // Draw images
+  // Draw each image with spacing and rounded corners
   imageElements.forEach((img, index) => {
     const col = index % columns;
     const row = Math.floor(index / columns);
 
-    const x = col * (cellWidth + spacing);
-    const y = row * (cellHeight + spacing);
+    const x = col * (cellWidth + safeSpacing);
+    const y = row * (cellHeight + safeSpacing);
 
-    if (borderRadius > 0) {
-      // Apply rounded corner clipping
+    if (safeRadius > 0) {
       ctx.save();
-      roundRect(ctx, x, y, cellWidth, cellHeight, borderRadius);
+      roundRect(ctx, x, y, cellWidth, cellHeight, safeRadius);
       ctx.clip();
     }
 
     ctx.drawImage(img, x, y, cellWidth, cellHeight);
 
-    if (borderRadius > 0) {
+    if (safeRadius > 0) {
       ctx.restore();
     }
   });
 
-  // Export the canvas to blob
-  const mimeType = outputFormat === 'png' ? 'image/png' :
-                   outputFormat === 'webp' ? 'image/webp' :
-                   'image/jpeg';
+  // Export canvas as blob
+  const mimeType =
+    outputFormat === 'png' ? 'image/png' :
+    outputFormat === 'webp' ? 'image/webp' :
+    'image/jpeg';
 
-  const blob = await new Promise(resolve => {
-    canvas.toBlob(resolve, mimeType, quality / 100);
-  });
+  const blob = await new Promise(resolve =>
+    canvas.toBlob(resolve, mimeType, quality / 100)
+  );
 
   return blob;
 }
 
-// Helper to draw rounded rectangles
+// Helper for rounded rectangle path
 function roundRect(ctx, x, y, width, height, radius) {
   ctx.beginPath();
   ctx.moveTo(x + radius, y);

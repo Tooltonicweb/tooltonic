@@ -72,6 +72,7 @@ export default function ImageResizerPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-10 space-y-6">
+      {/* Upload Box */}
       <div
         {...getRootProps()}
         className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors ${
@@ -80,8 +81,8 @@ export default function ImageResizerPage() {
       >
         <input {...getInputProps()} />
         <div className="flex flex-col items-center justify-center space-y-3">
-          <div style={{ width: '200px', textAlign: 'center' }}>
-            <svg className="w-3 h-3 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="text-blue-500">
+            <svg style={{ width: '100px', height: '100px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -90,7 +91,6 @@ export default function ImageResizerPage() {
               />
             </svg>
           </div>
-
           <p className="text-lg font-medium">
             {isDragActive ? 'Drop the file here' : 'Drag & drop an image, or click to select'}
           </p>
@@ -98,8 +98,10 @@ export default function ImageResizerPage() {
         </div>
       </div>
 
+      {/* Image Preview & Controls */}
       {preview && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Original Image */}
           <div className="space-y-2">
             <h3 className="font-medium">Original Image</h3>
             <Image
@@ -110,11 +112,10 @@ export default function ImageResizerPage() {
               className="w-full rounded-lg border"
               unoptimized
             />
-            <p className="text-sm text-gray-500">
-              Size: {(file?.size / 1024).toFixed(2)} KB
-            </p>
+            <p className="text-sm text-gray-500">Size: {(file?.size / 1024).toFixed(2)} KB</p>
           </div>
 
+          {/* Resize Options */}
           <div className="space-y-4">
             <h3 className="font-medium">Resize Options</h3>
 
@@ -166,9 +167,7 @@ export default function ImageResizerPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
-                Quality: {options.quality}%
-              </label>
+              <label className="block text-sm font-medium mb-1">Quality: {options.quality}%</label>
               <input
                 type="range"
                 min="1"
@@ -189,8 +188,22 @@ export default function ImageResizerPage() {
               {loading ? 'Processing...' : 'Download Resized Image'}
             </button>
           </div>
+
+         
         </div>
       )}
+
+       {/* 📄 User Manual */}
+          <div className="mt-6 text-center md:col-span-2">
+            <a
+              href="/manuals/User Manual for Image Resizer.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-md shadow hover:opacity-90 transition"
+            >
+              📘 Download User Manual (PDF)
+            </a>
+          </div>
     </div>
   );
 }

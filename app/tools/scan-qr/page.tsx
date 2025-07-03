@@ -20,12 +20,22 @@ export default function QRScannerPage() {
 
   const initScanner = async () => {
     try {
-      if (!videoRef.current) return;
+      if (!videoRef.current) {
+        setError('Video element not found.');
+        return null;
+      }
 
       const { default: QrScanner } = await import('qr-scanner');
+
+      const hasCam = await QrScanner.hasCamera();
+      if (!hasCam) {
+        setError('No camera found on this device.');
+        return null;
+      }
+
       const scanner = new QrScanner(
         videoRef.current,
-        result => {
+        (result) => {
           setScanResult(result.data);
           setIsScanning(false);
           scanner.stop();
@@ -38,27 +48,42 @@ export default function QRScannerPage() {
           returnDetailedScanResult: true,
         }
       );
+
       setQrScanner(scanner);
       return scanner;
     } catch (err) {
-      setError('Failed to initialize QR scanner.');
-      console.error(err);
+      console.error('Failed to initialize scanner:', err);
+      setError('QR Scanner initialization failed.');
+      return null;
     }
   };
 
   const toggleScanning = async () => {
-    if (isScanning) {
-      qrScanner?.stop();
-      setIsScanning(false);
-    } else {
-      try {
-        await qrScanner?.start();
+    try {
+      let scanner = qrScanner;
+
+      if (!scanner) {
+        scanner = await initScanner();
+        if (!scanner) return;
+      }
+
+      if (isScanning) {
+        scanner.stop();
+        setIsScanning(false);
+      } else {
+        await scanner.start(); // triggers permission prompt
         setIsScanning(true);
         setScanResult('');
         setError('');
-      } catch (err) {
-        setError('Camera access denied.');
-        console.error(err);
+      }
+    } catch (err: any) {
+      console.error('Camera error:', err);
+      if (err.name === 'NotAllowedError') {
+        setError('Camera access denied. Please allow permission in browser.');
+      } else if (err.name === 'NotFoundError') {
+        setError('No camera found on this device.');
+      } else {
+        setError('Failed to access camera. Try refreshing or changing browser.');
       }
     }
   };
@@ -200,7 +225,6 @@ export default function QRScannerPage() {
         <div
           onDragOver={handleDragOver}
           onDrop={handleDrop}
-          onClick={() => fileInputRef.current?.click()}
           className="cursor-pointer border-2 border-dashed border-gray-400 dark:border-gray-600 p-6 rounded text-center"
         >
           {filePreview ? (
@@ -227,17 +251,21 @@ export default function QRScannerPage() {
           ) : (
             <>
               <p className="text-lg">Drag & drop a QR code image here</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">or click to browse</p>
-              <button
-                onClick={toggleScanning}
-                className={`mt-4 px-4 py-2 rounded-lg text-white ${
-                  isScanning ? 'bg-red-500' : 'bg-blue-500'
-                }`}
-              >
-                {isScanning ? 'Stop Camera' : 'Use Camera'}
-              </button>
+              <p className="text-sm text-gray-500 dark:text-gray-400">or use the buttons below</p>
+
+              <div className="flex flex-wrap gap-4 justify-center mt-4">
+                <button
+                  onClick={toggleScanning}
+                  className={`px-4 py-2 rounded-lg text-white ${
+                    isScanning ? 'bg-red-500' : 'bg-blue-500'
+                  }`}
+                >
+                  {isScanning ? 'Stop Camera' : 'Use Camera'}
+                </button>
+              </div>
             </>
           )}
+
           <input
             type="file"
             ref={fileInputRef}
@@ -249,7 +277,13 @@ export default function QRScannerPage() {
 
         {isScanning && (
           <div className="my-6">
-            <video ref={videoRef} className="w-full max-h-64 rounded" playsInline></video>
+            <video
+              ref={videoRef}
+              className="w-full max-h-64 rounded"
+              playsInline
+              autoPlay
+              muted
+            />
           </div>
         )}
 
