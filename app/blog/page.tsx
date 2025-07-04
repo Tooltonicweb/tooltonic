@@ -11,7 +11,7 @@ export default function BlogPage() {
       </section>
 
       <section className="blog-posts grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {[1, 2, 3].map((item) => (
+        {[1].map((item) => (
           <div
             key={item}
             className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition"

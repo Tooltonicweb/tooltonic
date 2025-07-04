@@ -1,23 +1,24 @@
 import Link from 'next/link';
 import { toolsData } from '../../lib/constants';
+import ToolCard from '../../components/ToolCard';
 
 export default function ToolsPage() {
   return (
-    <main className="p-10 max-w-4xl mx-auto">
-      <h1 className="text-4xl font-bold mb-6">All Tools</h1>
+    <main className="container mx-auto px-4 py-8">
+      
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {toolsData.map((tool) => (
-          <Link
-            key={tool.slug}
-            href={`/tools/${tool.slug}`}
-            className="block p-4 border rounded hover:bg-gray-50 transition"
-          >
-            <h2 className="text-2xl font-semibold">{tool.title}</h2>
-            <p className="text-gray-600">{tool.description}</p>
-          </Link>
-        ))}
-      </div>
+       <section id="tools" className="py-8">
+        <h1 className="text-3xl font-bold mb-8 text-center">All Tools</h1>
+        <div className="tools-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {toolsData.map((tool, index) => (
+            <ToolCard
+              key={tool.id}
+              tool={tool}
+              animationDelay={index * 0.1}
+            />
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

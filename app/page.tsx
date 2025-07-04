@@ -5,10 +5,13 @@ import { useRouter } from 'next/navigation'; // Sirf agar use ho raha ho tab
 import ToolCard from '../components/ToolCard';
 import { toolsData } from '../lib/constants';
 import AdSpace from '../components/AdSpace';
+import MetaTags from '../components/MetaTags'; // ✅ Import it
 
 export default function Home() { 
   return ( 
-    <main className="container mx-auto px-4 py-8"> 
+     <>
+     <MetaTags />
+    <main className="container mx-auto px-4 py-8">
       <AdSpace type="horizontal" /> 
        
       <section className="hero text-center py-12"> 
@@ -54,5 +57,6 @@ export default function Home() {
         </div> 
       </section> 
     </main> 
+     </>
   ); 
 }

@@ -165,16 +165,7 @@ export default function Home() {
         
 
         <AdBanner position="top" />
-<div className={styles.userManual}>
-  <a
-    href="/manuals/User Manual for Convert File.pdf"
-    target="_blank"
-    rel="noopener noreferrer"
-    className={styles.manualLink}
-  >
-    📄 Download User Manual (PDF)
-  </a>
-</div>
+
         <div className={styles.content}>
           <AdBanner position="left" />
 

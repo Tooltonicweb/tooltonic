@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Script from 'next/script';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import styles from '../../../styles/Home.module.css';
 
 export default function QRScannerPage() {
   const pathname = usePathname();
@@ -71,7 +72,7 @@ export default function QRScannerPage() {
         scanner.stop();
         setIsScanning(false);
       } else {
-        await scanner.start(); // triggers permission prompt
+        await scanner.start();
         setIsScanning(true);
         setScanResult('');
         setError('');
@@ -223,10 +224,11 @@ export default function QRScannerPage() {
         <h1 className="text-2xl font-bold mb-4">QR Code Scanner</h1>
 
         <div
-          onDragOver={handleDragOver}
-          onDrop={handleDrop}
-          className="cursor-pointer border-2 border-dashed border-gray-400 dark:border-gray-600 p-6 rounded text-center"
-        >
+        className={styles.dropzone}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+      >
           {filePreview ? (
             <div className="relative">
               <Image
@@ -250,8 +252,16 @@ export default function QRScannerPage() {
             </div>
           ) : (
             <>
+              <svg style={{ width: '100px', height: '100px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+              />
+            </svg>
               <p className="text-lg">Drag & drop a QR code image here</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">or use the buttons below</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">or click to upload / use camera</p>
 
               <div className="flex flex-wrap gap-4 justify-center mt-4">
                 <button

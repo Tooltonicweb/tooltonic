@@ -14,8 +14,10 @@ const MetaTags = () => {
         name="keywords"
         content="file converter, image converter, PDF converter, online file conversion, free file converter, AI file conversion"
       />
+       <meta name="google-site-verification" content="HHgvf8IYHQHr34iBsu8fo7TNGWtIFLcFjLcpdt4QptY" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
       <meta name="robots" content="index, follow" />
+      
 
       {/* Open Graph / Facebook */}
       <meta property="og:type" content="website" />
@@ -25,7 +27,9 @@ const MetaTags = () => {
         property="og:description"
         content="Convert your files online with ToolTonic. Free AI-powered file conversion for images, documents, and more."
       />
-      <meta property="og:image" content="https://tooltonic.io/images/og-image.jpg" />
+      <meta property="og:image" content="https://tooltonic.io/og-image.png" />
+      <meta property="og:image:width" content="100" />
+<meta property="og:image:height" content="100" />
 
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
@@ -35,7 +39,7 @@ const MetaTags = () => {
         property="twitter:description"
         content="Convert your files online with ToolTonic. Free AI-powered file conversion for images, documents, and more."
       />
-      <meta property="twitter:image" content="https://tooltonic.io/images/twitter-image.jpg" />
+      <meta property="twitter:image" content="https://tooltonic.io/og-image.png" />
 
       {/* Favicon & Manifest */}
       <link rel="icon" href="/favicon.ico" />
@@ -48,6 +52,8 @@ const MetaTags = () => {
 
       {/* Canonical URL */}
       <link rel="canonical" href="https://tooltonic.io/" />
+
+     
     </Head>
   );
 };

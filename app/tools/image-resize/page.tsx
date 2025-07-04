@@ -2,13 +2,14 @@
 
 import { useState, useCallback } from 'react';
 import Image from 'next/image';
-import { useDropzone } from 'react-dropzone';
 import Compressor from 'compressorjs';
+import styles from '../../../styles/Home.module.css';
 
 export default function ImageResizerPage() {
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
   const [options, setOptions] = useState({
     width: 800,
     height: 600,
@@ -17,20 +18,26 @@ export default function ImageResizerPage() {
     quality: 80,
   });
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (!file) return;
-    setFile(file);
-    setPreview(URL.createObjectURL(file));
-  }, []);
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setPreview(URL.createObjectURL(selectedFile));
+    }
+  };
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.webp'],
-    },
-    maxFiles: 1,
-  });
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const droppedFile = e.dataTransfer.files?.[0];
+    if (droppedFile) {
+      setFile(droppedFile);
+      setPreview(URL.createObjectURL(droppedFile));
+    }
+  };
 
   const handleResize = async () => {
     if (!file) return;
@@ -43,10 +50,10 @@ export default function ImageResizerPage() {
           height: options.height,
           quality: options.quality / 100,
           mimeType: `image/${options.format}`,
-          success: (result) => {
+          success: (res) => {
             const fileName = file.name.replace(/\.[^/.]+$/, '');
-            const finalFile = new File([result], `${fileName}_resized.${options.format}`, {
-              type: result.type,
+            const finalFile = new File([res], `${fileName}_resized.${options.format}`, {
+              type: res.type,
               lastModified: Date.now(),
             });
             resolve(finalFile);
@@ -74,15 +81,12 @@ export default function ImageResizerPage() {
     <div className="max-w-4xl mx-auto py-10 space-y-6">
       {/* Upload Box */}
       <div
-        {...getRootProps()}
-        className={`border-2 border-dashed rounded-xl p-12 text-center cursor-pointer transition-colors ${
-          isDragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300 hover:border-blue-400'
-        }`}
+        className={styles.dropzone}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       >
-        <input {...getInputProps()} />
-        <div className="flex flex-col items-center justify-center space-y-3">
-          <div className="text-blue-500">
-            <svg style={{ width: '100px', height: '100px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className={styles.dropzoneContent}>
+          <svg style={{ width: '100px', height: '100px' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -90,22 +94,27 @@ export default function ImageResizerPage() {
                 d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
               />
             </svg>
-          </div>
-          <p className="text-lg font-medium">
-            {isDragActive ? 'Drop the file here' : 'Drag & drop an image, or click to select'}
-          </p>
-          <p className="text-sm text-gray-500">Supports: JPEG, PNG, WEBP</p>
+          <p className="font-medium">Drag & drop your image here</p>
+          <p>or</p>
+          <label className={styles.browseButton}>
+            Browse files
+            <input
+              type="file"
+              onChange={handleFileInput}
+              className={styles.fileInput}
+              accept="image/*"
+            />
+          </label>
         </div>
       </div>
 
       {/* Image Preview & Controls */}
       {preview && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Original Image */}
           <div className="space-y-2">
             <h3 className="font-medium">Original Image</h3>
             <Image
-              src={preview as string}
+              src={preview}
               alt="Original"
               width={options.width}
               height={options.height}
@@ -115,7 +124,6 @@ export default function ImageResizerPage() {
             <p className="text-sm text-gray-500">Size: {(file?.size / 1024).toFixed(2)} KB</p>
           </div>
 
-          {/* Resize Options */}
           <div className="space-y-4">
             <h3 className="font-medium">Resize Options</h3>
 
@@ -182,28 +190,26 @@ export default function ImageResizerPage() {
               onClick={handleResize}
               disabled={loading}
               className={`w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md transition ${
-                loading ? 'opacity-70 cursor-not-allowed' : ''
+                loading ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'
               }`}
             >
               {loading ? 'Processing...' : 'Download Resized Image'}
             </button>
           </div>
-
-         
         </div>
       )}
 
-       {/* 📄 User Manual */}
-          <div className="mt-6 text-center md:col-span-2">
-            <a
-              href="/manuals/User Manual for Image Resizer.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-md shadow hover:opacity-90 transition"
-            >
-              📘 Download User Manual (PDF)
-            </a>
-          </div>
+      {/* User Manual */}
+      <div className="mt-6 text-center md:col-span-2">
+        <a
+          href="/manuals/User Manual for Image Resizer.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-2 rounded-md shadow hover:opacity-90 transition cursor-pointer"
+        >
+          📘 Download User Manual (PDF)
+        </a>
+      </div>
     </div>
   );
 }

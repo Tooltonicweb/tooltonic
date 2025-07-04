@@ -63,10 +63,25 @@ const Header = () => {
           </div>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center space-x-6">
-            <Link href="/tools" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">All Tools</Link>
-            <Link href="/manuals/User Manual for ToolTonic.pdf" className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors">User Manual</Link>
-          </nav>
+         <nav className="hidden md:flex items-center space-x-6">
+  <Link
+    href="/tools"
+    className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+  >
+    🧰 All Tools
+  </Link>
+
+  <Link
+    href="/manuals/User Manual for ToolTonic.pdf"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 px-3 py-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800"
+  >
+    📘 User Manual
+  </Link>
+</nav>
+
+
 
           {/* Right controls */}
           <div className="flex items-center space-x-4">

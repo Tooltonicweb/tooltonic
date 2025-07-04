@@ -42,6 +42,16 @@ const FileDropzone: React.FC<Props> = ({ onFileChange }) => {
             accept="image/*,application/pdf"
           />
         </label>
+        <div className={styles.userManual}>
+  <a
+    href="/manuals/User Manual for Convert File.pdf"
+    target="_blank"
+    rel="noopener noreferrer"
+    className={styles.manualLink}
+  >
+    📄 Download User Manual (PDF)
+  </a>
+</div>
         {/* ✅ Supported formats info */}
     <p className={`${styles.supportedFormatsText} text-sm text-gray-500 mt-2`}>
       Supported formats: <span className="font-medium">JPEG, PNG, WEBP, GIF, PDF</span>
