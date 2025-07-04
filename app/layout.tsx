@@ -52,7 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "@type": "Organization",
               name: "ToolTonic",
               url: "https://tooltonic.io",
-              logo: "https://tooltonic.io/logo.png",
+              logo: "https://tooltonic.io/og-image.png",
             }),
           }}
         />
