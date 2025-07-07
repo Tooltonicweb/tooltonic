@@ -52,6 +52,13 @@ const Header = () => {
           <div className="flex items-center space-x-2">
             <Link href="/" className="flex items-center space-x-2">
              <div className="flex items-center space-x-4">
+               <Image
+    src="/og-image.png" // ✅ Replace with your second image file
+    alt="Second Logo"
+    width={50}
+    height={50}
+    className="rounded-lg"
+  />
   <Image
     src="/logo.png" // ✅ Public folder path
     alt="ToolTonic Logo"
@@ -60,13 +67,7 @@ const Header = () => {
     className="rounded-lg"
   />
 
-  <Image
-    src="/og-image.png" // ✅ Replace with your second image file
-    alt="Second Logo"
-    width={190}
-    height={100}
-    className="rounded-lg"
-  />
+  
 </div>
 
               
