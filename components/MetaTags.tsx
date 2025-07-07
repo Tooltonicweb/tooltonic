@@ -52,7 +52,18 @@ const MetaTags = () => {
 
       {/* Canonical URL */}
       <link rel="canonical" href="https://tooltonic.io/" />
-
+<script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "ToolTonic",
+            url: "https://tooltonic.io",
+            logo: "https://tooltonic.io/og-image.png",
+          }),
+        }}
+      />
      
     </Head>
   );
